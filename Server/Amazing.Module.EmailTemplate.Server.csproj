@@ -5,10 +5,10 @@
     <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
     <Version>1.0.0</Version>
     <Product>Amazing.Module.EmailTemplate</Product>
-    <Authors>Amazing</Authors>
-    <Company>Amazing</Company>
-    <Description>Amazing.Module.EmailTemplate is a module built for Oqtane</Description>
-    <Copyright>Amazing</Copyright>
+    <Authors>Vineet Belani (vnetonline)</Authors>
+    <Company>Amazing Software Solutions Pty Limited</Company>
+    <Description>Amazing.Module.EmailTemplate is a module built for Oqtane uding oqtane-ai-playbook created by @leigh-pointer</Description>
+    <Copyright>Amazing Software Solutions Pty Limited</Copyright>
     <AssemblyName>Amazing.Module.EmailTemplate.Server.Oqtane</AssemblyName>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
     <StaticWebAssetsFingerprintContent>false</StaticWebAssetsFingerprintContent>

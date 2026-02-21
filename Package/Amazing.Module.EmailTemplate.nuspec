@@ -3,11 +3,11 @@
     <metadata>
         <id>$projectname$</id>
         <version>1.0.0</version>
-        <authors>Amazing</authors>
-        <owners>Amazing</owners>
-        <title>EmailTemplate</title>
-        <description>Amazing.Module.EmailTemplate is a module built for Oqtane</description>
-        <copyright>Amazing</copyright>
+        <authors>Vineet Belani (vnetonline)</authors>
+        <owners>Amazing Software Solutions Pty Limited</owners>
+        <title>Amazing.Module.EmailTemplate</title>
+        <description>Amazing.Module.EmailTemplate is a module built for Oqtane uding oqtane-ai-playbook created by @leigh-pointer</description>
+        <copyright>Amazing Software Solutions Pty Limited</copyright>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
         <license type="expression">MIT</license>
         <projectUrl>https://github.com/oqtane/oqtane.framework</projectUrl>

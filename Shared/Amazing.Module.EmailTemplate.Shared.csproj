@@ -4,10 +4,10 @@
     <TargetFramework>net10.0</TargetFramework>    
     <Version>1.0.0</Version>
     <Product>Amazing.Module.EmailTemplate</Product>
-    <Authors>Amazing</Authors>
-    <Company>Amazing</Company>
+    <Authors>Vineet Belani (vnetonline)</Authors>
+    <Company>Amazing Software Solutions Pty Limited</Company>
     <Description>Amazing.Module.EmailTemplate is a module built for Oqtane</Description>
-    <Copyright>Amazing</Copyright>
+    <Copyright>Amazing Software Solutions Pty Limited</Copyright>
     <AssemblyName>Amazing.Module.EmailTemplate.Shared.Oqtane</AssemblyName>
   </PropertyGroup>
 

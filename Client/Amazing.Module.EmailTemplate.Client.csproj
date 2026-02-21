@@ -3,11 +3,11 @@
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <Version>1.0.0</Version>
-    <Authors>Amazing</Authors>
-    <Company>Amazing</Company>
-    <Description>Amazing.Module.EmailTemplate is a module built for Oqtane</Description>
+    <Authors>Vineet Belani (vnetonline)</Authors>
+    <Company>Amazing Software Solutions Pty Limited</Company>
+    <Description>Amazing.Module.EmailTemplate is a module built for Oqtane uding oqtane-ai-playbook created by @leigh-pointer</Description>
     <Product>Amazing.Module.EmailTemplate</Product>
-    <Copyright>Amazing</Copyright>
+    <Copyright>Amazing Software Solutions Pty Limited</Copyright>
     <AssemblyName>Amazing.Module.EmailTemplate.Client.Oqtane</AssemblyName>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
   </PropertyGroup>
