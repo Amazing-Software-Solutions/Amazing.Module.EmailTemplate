@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>1.0.0</Version>
+    <Version>1.0.1</Version>
     <Authors>Vineet Belani (vnetonline)</Authors>
     <Company>Amazing Software Solutions Pty Limited</Company>
     <Description>Amazing.Module.EmailTemplate is a module built for Oqtane uding oqtane-ai-playbook created by @leigh-pointer</Description>
