@@ -12,7 +12,7 @@ A professional email template management module for Oqtane Framework with rich H
 
 ### Email Template Management
 - **CRUD Operations** - Create, read, update, and delete email templates
-- **Rich HTML Editor** - QuillJS-powered WYSIWYG editor with formatting toolbar
+- **Rich HTML Editor** - Oqtane's RichTextEditor component (supports Radzen or QuillJS)
 - **Template Variables** - Dynamic content replacement using `{{VariableName}}` syntax
 - **Category Organization** - Group templates by functional area
 - **Active/Inactive Status** - Control template availability
@@ -168,32 +168,32 @@ public class YourModuleService
 - **UI**: Blazor Server + WebAssembly
 - **Database**: Multi-database support (SQL Server, MySQL, PostgreSQL, SQLite)
 - **Email**: Oqtane Notification System + MailKit
-- **Editor**: QuillJS Rich Text Editor
+- **Editor**: Oqtane RichTextEditor (Radzen Blazor HTML Editor or QuillJS)
 
 ### Module Structure
 ```
 Amazing.Module.EmailTemplate/
-??? Shared/               # Models and interfaces
-?   ??? Models/
-?   ?   ??? EmailTemplate.cs
-?   ?   ??? EmailSendResult.cs
-?   ?   ??? TemplateInfo.cs
-?   ??? Services/
-?       ??? IEmailSendingService.cs  (Public API)
-?
-??? Server/               # Business logic and API
-?   ??? Controllers/
-?   ?   ??? EmailTemplateController.cs
-?   ??? Services/
-?   ?   ??? EmailTemplateService.cs    (Internal)
-?   ?   ??? EmailSendingService.cs     (Public)
-?   ??? Repository/
-?       ??? EmailTemplateRepository.cs
-?
-??? Client/               # Blazor UI components
-    ??? Modules/Amazing.Module.EmailTemplate/
-        ??? Index.razor
-        ??? Edit.razor
+|-- Shared/               # Models and interfaces
+|   |-- Models/
+|   |   |-- EmailTemplate.cs
+|   |   |-- EmailSendResult.cs
+|   |   +-- TemplateInfo.cs
+|   +-- Services/
+|       +-- IEmailSendingService.cs  (Public API)
+|
+|-- Server/               # Business logic and API
+|   |-- Controllers/
+|   |   +-- EmailTemplateController.cs
+|   |-- Services/
+|   |   |-- EmailTemplateService.cs    (Internal)
+|   |   +-- EmailSendingService.cs     (Public)
+|   +-- Repository/
+|       +-- EmailTemplateRepository.cs
+|
++-- Client/               # Blazor UI components
+    +-- Modules/Amazing.Module.EmailTemplate/
+        |-- Index.razor
+        +-- Edit.razor
 ```
 
 ---
@@ -215,6 +215,16 @@ Amazing.Module.EmailTemplate/
 ---
 
 ## Configuration Requirements
+
+### Rich Text Editor
+
+This module uses Oqtane's **RichTextEditor** component, which can be configured to use:
+- **Radzen Blazor HTML Editor** (default in Oqtane 10+) - Modern, feature-rich editor
+- **QuillJS** (legacy option) - JavaScript-based editor
+
+The editor is configured in **Admin ? Site Settings ? Advanced Settings ? Rich Text Editor Provider**.
+
+Your module will automatically use whichever editor is configured for the site.
 
 ### SMTP Setup (Required for Email Delivery)
 
@@ -458,8 +468,9 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Acknowledgments
 
-- **Oqtane Framework** - The amazing CMS/Application Framework this module is built for
-- **QuillJS** - Rich text editor integration
+- **Oqtane Framework** - The CMS/Application Framework this module is built for
+- **Radzen Blazor** - Rich HTML editor component (default in Oqtane 10+)
+- **QuillJS** - Alternative rich text editor option
 - **MailKit** - Email delivery (via Oqtane)
 - **Oqtane Community** - Support and guidance
 
