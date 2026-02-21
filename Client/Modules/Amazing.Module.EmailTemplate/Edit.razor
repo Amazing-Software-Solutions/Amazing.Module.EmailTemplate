@@ -1,0 +1,248 @@
+@using Oqtane.Modules.Controls
+@using Amazing.Module.EmailTemplate.Services
+@using Amazing.Module.EmailTemplate.Models
+
+@namespace Amazing.Module.EmailTemplate
+@inherits ModuleBase
+@inject IEmailTemplateService EmailTemplateService
+@inject NavigationManager NavigationManager
+@inject IStringLocalizer<Edit> Localizer
+
+<form @ref="form" class="@(validated ? " was-validated" : "needs-validation" )" novalidate>
+    <div class="container">
+        <div class="row mb-1 align-items-center">
+            <Label Class="col-sm-3" For="name" HelpText="Enter a name" ResourceKey="Name">Name: </Label>
+            <div class="col-sm-9">
+                <input id="name" class="form-control" @bind="@_name" required />
+            </div>
+        </div>
+        <div class="row mb-1 align-items-center">
+            <Label Class="col-sm-3" For="description" HelpText="Enter a description" ResourceKey="Description">Description: </Label>
+            <div class="col-sm-9">
+                <textarea id="description" class="form-control" @bind="@_description" rows="2"></textarea>
+            </div>
+        </div>
+        <div class="row mb-1 align-items-center">
+            <Label Class="col-sm-3" For="category" HelpText="Enter a category" ResourceKey="Category">Category: </Label>
+            <div class="col-sm-9">
+                <input id="category" class="form-control" @bind="@_category" />
+            </div>
+        </div>
+        <div class="row mb-1 align-items-center">
+            <Label Class="col-sm-3" For="subject" HelpText="Enter email subject" ResourceKey="Subject">Subject: </Label>
+            <div class="col-sm-9">
+                <input id="subject" class="form-control" @bind="@_subject" required />
+            </div>
+        </div>
+        <div class="row mb-1 align-items-center">
+            <Label Class="col-sm-3" For="templateVariables" HelpText="Enter template variables (comma-separated)" ResourceKey="TemplateVariables">Variables: </Label>
+            <div class="col-sm-9">
+                <input id="templateVariables" class="form-control" @bind="@_templateVariables" placeholder="e.g., {{FirstName}},{{LastName}},{{Email}}" />
+            </div>
+        </div>
+        <div class="row mb-1 align-items-center">
+            <Label Class="col-sm-3" For="isActive" HelpText="Is this template active?" ResourceKey="IsActive">Active: </Label>
+            <div class="col-sm-9">
+                <input id="isActive" type="checkbox" @bind="@_isActive" />
+            </div>
+        </div>
+    </div>
+    
+    <Section Name="EmailBody" Heading="Email Body" ResourceKey="EmailBody">
+        <RichTextEditor Content="@_body" @ref="@RichTextEditorBody" Placeholder="Enter email body content"></RichTextEditor>
+    </Section>
+    
+    <Section Name="TestEmail" Heading="Test Email" ResourceKey="TestEmail" Expanded="false">
+        <div class="container">
+            <div class="row mb-1 align-items-center">
+                <Label Class="col-sm-3" For="testEmail" HelpText="Enter email address to send test" ResourceKey="TestEmailAddress">Test Email: </Label>
+                <div class="col-sm-9">
+                    <input id="testEmail" type="email" class="form-control" @bind="@_testEmail" placeholder="user@example.com" />
+                </div>
+            </div>
+            <div class="row mb-1 align-items-center">
+                <Label Class="col-sm-3" For="testVariables" HelpText="Sample data for template variables (JSON format)" ResourceKey="TestVariables">Sample Variables: </Label>
+                <div class="col-sm-9">
+                    <textarea id="testVariables" class="form-control" @bind="@_testVariables" rows="3" placeholder='{"FirstName":"John","LastName":"Doe","Email":"john@example.com"}'></textarea>
+                </div>
+            </div>
+            <div class="row mb-1">
+                <div class="col-sm-9 offset-sm-3">
+                    <button type="button" class="btn btn-primary" @onclick="SendTestEmail">
+                        <i class="oi oi-envelope-closed"></i> @Localizer["SendTestEmail"]
+                    </button>
+                </div>
+            </div>
+        </div>
+    </Section>
+    <br />
+
+    <button type="button" class="btn btn-success" @onclick="Save">@Localizer["Save"]</button>
+    <NavLink class="btn btn-secondary" href="@NavigateUrl()">@Localizer["Cancel"]</NavLink>
+    <br /><br />
+    @if (PageState.Action == "Edit")
+    {
+    <AuditInfo CreatedBy="@_createdby" CreatedOn="@_createdon" ModifiedBy="@_modifiedby" ModifiedOn="@_modifiedon"></AuditInfo>
+    }
+</form>
+
+@code {
+    public override SecurityAccessLevel SecurityAccessLevel => SecurityAccessLevel.Edit;
+
+    public override string Actions => "Add,Edit";
+
+    public override string Title => "Manage EmailTemplate";
+
+    public override List<Resource> Resources => new List<Resource>()
+    {
+        new Stylesheet("_content/Amazing.Module.EmailTemplate/Module.css")
+    };
+
+    private ElementReference form;
+    private bool validated = false;
+    private RichTextEditor RichTextEditorBody;
+
+    private int _id;
+    private string _name;
+    private string _description;
+    private string _category;
+    private string _subject;
+    private string _body;
+    private string _templateVariables;
+    private bool _isActive = true;
+    private string _testEmail = "";
+    private string _testVariables = "";
+    private string _createdby;
+    private DateTime _createdon;
+    private string _modifiedby;
+    private DateTime _modifiedon;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            if (PageState.Action == "Edit")
+            {
+                _id = Int32.Parse(PageState.QueryString["id"]);
+                EmailTemplate EmailTemplate = await EmailTemplateService.GetEmailTemplateAsync(_id, ModuleState.ModuleId);
+                if (EmailTemplate != null)
+                {
+                    _name = EmailTemplate.Name;
+                    _description = EmailTemplate.Description;
+                    _category = EmailTemplate.Category;
+                    _subject = EmailTemplate.Subject;
+                    _body = EmailTemplate.Body ?? string.Empty;
+                    _templateVariables = EmailTemplate.TemplateVariables;
+                    _isActive = EmailTemplate.IsActive;
+                    _createdby = EmailTemplate.CreatedBy;
+                    _createdon = EmailTemplate.CreatedOn;
+                    _modifiedby = EmailTemplate.ModifiedBy;
+                    _modifiedon = EmailTemplate.ModifiedOn;
+                }
+            }
+            else
+            {
+                _body = string.Empty;
+            }
+        }
+        catch (Exception ex)
+        {
+            await logger.LogError(ex, "Error Loading EmailTemplate {EmailTemplateId} {Error}", _id, ex.Message);
+            AddModuleMessage(Localizer["Message.LoadError"], MessageType.Error);
+        }
+    }
+
+    private async Task Save()
+    {
+        try
+        {
+            validated = true;
+            var interop = new Oqtane.UI.Interop(JSRuntime);
+            if (await interop.FormValid(form))
+            {
+                string body = await RichTextEditorBody.GetHtml();
+                
+                if (PageState.Action == "Add")
+                {
+                    EmailTemplate EmailTemplate = new EmailTemplate();
+                    EmailTemplate.ModuleId = ModuleState.ModuleId;
+                    EmailTemplate.Name = _name;
+                    EmailTemplate.Description = _description;
+                    EmailTemplate.Category = _category;
+                    EmailTemplate.Subject = _subject;
+                    EmailTemplate.Body = body;
+                    EmailTemplate.TemplateVariables = _templateVariables;
+                    EmailTemplate.IsActive = _isActive;
+                    EmailTemplate = await EmailTemplateService.AddEmailTemplateAsync(EmailTemplate);
+                    await logger.LogInformation("EmailTemplate Added {EmailTemplate}", EmailTemplate);
+                }
+                else
+                {
+                    EmailTemplate EmailTemplate = await EmailTemplateService.GetEmailTemplateAsync(_id, ModuleState.ModuleId);
+                    EmailTemplate.Name = _name;
+                    EmailTemplate.Description = _description;
+                    EmailTemplate.Category = _category;
+                    EmailTemplate.Subject = _subject;
+                    EmailTemplate.Body = body;
+                    EmailTemplate.TemplateVariables = _templateVariables;
+                    EmailTemplate.IsActive = _isActive;
+                    await EmailTemplateService.UpdateEmailTemplateAsync(EmailTemplate);
+                    await logger.LogInformation("EmailTemplate Updated {EmailTemplate}", EmailTemplate);
+                }
+                NavigationManager.NavigateTo(NavigateUrl());
+            }
+            else
+            {
+                AddModuleMessage(Localizer["Message.SaveValidation"], MessageType.Warning);
+            }
+        }
+        catch (Exception ex)
+        {
+            await logger.LogError(ex, "Error Saving EmailTemplate {Error}", ex.Message);
+            AddModuleMessage(Localizer["Message.SaveError"], MessageType.Error);
+        }
+    }
+
+    private async Task SendTestEmail()
+    {
+        try
+        {
+            if (string.IsNullOrEmpty(_subject) || string.IsNullOrEmpty(_body))
+            {
+                AddModuleMessage(Localizer["Message.TestEmail.RequireSubjectBody"], MessageType.Warning);
+                return;
+            }
+
+            if (string.IsNullOrEmpty(_testEmail))
+            {
+                AddModuleMessage(Localizer["Message.TestEmail.RequireAddress"], MessageType.Warning);
+                return;
+            }
+
+            string body = await RichTextEditorBody.GetHtml();
+
+            var result = await EmailTemplateService.SendTestEmailAsync(
+                ModuleState.ModuleId,
+                _testEmail,
+                _subject,
+                body,
+                _testVariables
+            );
+
+            if (result.Success)
+            {
+                AddModuleMessage(Localizer["Success.TestEmail.Sent"], MessageType.Success);
+                await logger.LogInformation("Test Email Sent To {Email}", _testEmail);
+            }
+            else
+            {
+                AddModuleMessage(string.Format(Localizer["Error.TestEmail.Send"], result.Message), MessageType.Error);
+            }
+        }
+        catch (Exception ex)
+        {
+            await logger.LogError(ex, "Error Sending Test Email {Error}", ex.Message);
+            AddModuleMessage(Localizer["Error.TestEmail.Send"], MessageType.Error);
+        }
+    }
+}

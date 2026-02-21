@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>    
+    <Version>1.0.0</Version>
+    <Product>Amazing.Module.EmailTemplate</Product>
+    <Authors>Amazing</Authors>
+    <Company>Amazing</Company>
+    <Description>Amazing.Module.EmailTemplate is a module built for Oqtane</Description>
+    <Copyright>Amazing</Copyright>
+    <AssemblyName>Amazing.Module.EmailTemplate.Shared.Oqtane</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Oqtane.Shared"><HintPath>..\..\oqtane.framework\Oqtane.Server\bin\Debug\net10.0\Oqtane.Shared.dll</HintPath></Reference>
+  </ItemGroup>
+
+</Project>

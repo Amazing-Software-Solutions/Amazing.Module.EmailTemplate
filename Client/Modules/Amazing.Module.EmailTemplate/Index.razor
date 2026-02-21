@@ -1,0 +1,96 @@
+@using Amazing.Module.EmailTemplate.Services
+@using Amazing.Module.EmailTemplate.Models
+
+@namespace Amazing.Module.EmailTemplate
+@inherits ModuleBase
+@inject IEmailTemplateService EmailTemplateService
+@inject NavigationManager NavigationManager
+@inject IStringLocalizer<Index> Localizer
+
+@if (_EmailTemplates == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <ActionLink Action="Add" Security="SecurityAccessLevel.Edit" Text="Add EmailTemplate" ResourceKey="Add" />
+    <br />
+    <br />
+    @if (@_EmailTemplates.Count != 0)
+    {
+        <Pager Items="@_EmailTemplates">
+            <Header>
+                <th style="width: 1px;">&nbsp;</th>
+                <th style="width: 1px;">&nbsp;</th>
+                <th>@Localizer["Name"]</th>
+                <th>@Localizer["Category"]</th>
+                <th>@Localizer["Subject"]</th>
+                <th>@Localizer["Active"]</th>
+                <th>@Localizer["Modified"]</th>
+            </Header>
+            <Row>
+                <td><ActionLink Action="Edit" Parameters="@($"id=" + context.EmailTemplateId.ToString())" ResourceKey="Edit"  /></td>
+                <td><ActionDialog Header="Delete EmailTemplate" Message="Are You Sure You Wish To Delete This EmailTemplate?" Action="Delete" Security="SecurityAccessLevel.Edit" Class="btn btn-danger" OnClick="@(async () => await Delete(context))" ResourceKey="Delete"  Id="@context.EmailTemplateId.ToString()" /></td>
+                <td>@context.Name</td>
+                <td>@context.Category</td>
+                <td>@context.Subject</td>
+                <td>
+                    @if (context.IsActive)
+                    {
+                        <span class="badge bg-success">Active</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-secondary">Inactive</span>
+                    }
+                </td>
+                <td>@context.ModifiedOn.ToString("g")</td>
+            </Row>
+        </Pager>
+    }
+    else
+    {
+        <p>@Localizer["Message.DisplayNone"]</p>
+    }
+}
+
+@code {
+    public override string RenderMode => RenderModes.Static;
+
+    public override List<Resource> Resources => new List<Resource>()
+    {
+        new Stylesheet("_content/Amazing.Module.EmailTemplate/Module.css"),
+        new Script("_content/Amazing.Module.EmailTemplate/Module.js")
+    };
+
+    List<EmailTemplate> _EmailTemplates;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            _EmailTemplates = await EmailTemplateService.GetEmailTemplatesAsync(ModuleState.ModuleId);
+        }
+        catch (Exception ex)
+        {
+            await logger.LogError(ex, "Error Loading EmailTemplate {Error}", ex.Message);
+            AddModuleMessage(Localizer["Message.LoadError"], MessageType.Error);
+        }
+    }
+
+    private async Task Delete(EmailTemplate EmailTemplate)
+    {
+        try
+        {
+            await EmailTemplateService.DeleteEmailTemplateAsync(EmailTemplate.EmailTemplateId, ModuleState.ModuleId);
+            await logger.LogInformation("EmailTemplate Deleted {EmailTemplate}", EmailTemplate);
+            _EmailTemplates = await EmailTemplateService.GetEmailTemplatesAsync(ModuleState.ModuleId);
+            StateHasChanged();
+        }
+        catch (Exception ex)
+        {
+            await logger.LogError(ex, "Error Deleting EmailTemplate {EmailTemplate} {Error}", EmailTemplate, ex.Message);
+            AddModuleMessage(Localizer["Message.DeleteError"], MessageType.Error);
+        }
+    }
+}
