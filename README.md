@@ -8,9 +8,9 @@ A professional email template management module for Oqtane Framework with rich H
 
 ---
 
-## ? Features
+## Features
 
-### ?? **Email Template Management**
+### Email Template Management
 - **CRUD Operations** - Create, read, update, and delete email templates
 - **Rich HTML Editor** - QuillJS-powered WYSIWYG editor with formatting toolbar
 - **Template Variables** - Dynamic content replacement using `{{VariableName}}` syntax
@@ -19,13 +19,13 @@ A professional email template management module for Oqtane Framework with rich H
 - **Search Integration** - Full-text search on template content
 - **Module Portability** - Complete import/export support
 
-### ?? **Test Email Capability**
+### Test Email Capability
 - **Send Test Emails** - Validate templates before production use
 - **Sample Variable Input** - Test variable replacement with JSON data
 - **Instant Feedback** - Success/error messages with detailed logging
 - **Preview Your Templates** - See exactly what recipients will receive
 
-### ?? **Public Email Service** (For Developers)
+### Public Email Service (For Developers)
 - **IEmailSendingService** - Reusable service for other Oqtane modules
 - **Simple API** - Send templated emails with 3 lines of code
 - **Template Discovery** - List available templates by name or category
@@ -34,7 +34,7 @@ A professional email template management module for Oqtane Framework with rich H
 
 ---
 
-## ?? Quick Start
+## Quick Start
 
 ### Installation
 
@@ -51,7 +51,7 @@ A professional email template management module for Oqtane Framework with rich H
    - **Subject**: `Welcome {{FirstName}}!`
    - **Body**: Use the rich text editor to create formatted content
    - **Variables**: `{{FirstName}},{{LastName}},{{Email}}`
-   - **Active**: ? (checked)
+   - **Active**: Check the box
 3. Click **Save**
 
 ### Testing Your Template
@@ -72,14 +72,14 @@ A professional email template management module for Oqtane Framework with rich H
 
 ---
 
-## ?? Documentation
+## Documentation
 
 ### For Site Administrators
 - **[Quick Start Guide](QUICKSTART_GUIDE.md)** - Get started with test email feature
 - **[Complete Module Summary](MODULE_COMPLETE_SUMMARY.md)** - Full feature overview
 
 ### For Module Developers
-- **[Integration Guide](INTEGRATION_GUIDE.md)** ?? - Complete API reference and patterns
+- **[Integration Guide](INTEGRATION_GUIDE.md)** - Complete API reference and patterns
 - **[Example Integration](EXAMPLE_INTEGRATION.md)** - Copy-paste ready code examples
 
 ### Technical Documentation
@@ -88,7 +88,7 @@ A professional email template management module for Oqtane Framework with rich H
 
 ---
 
-## ?? Using This Module in Your Code
+## Using This Module in Your Code
 
 Other Oqtane modules can use this module as a centralized email service!
 
@@ -133,7 +133,7 @@ public class YourModuleService
 
 ---
 
-## ?? Use Cases
+## Use Cases
 
 ### User Management
 - Registration welcome emails
@@ -161,7 +161,7 @@ public class YourModuleService
 
 ---
 
-## ??? Architecture
+## Architecture
 
 ### Technology Stack
 - **Framework**: Oqtane 10.0.4 on .NET 10
@@ -198,7 +198,7 @@ Amazing.Module.EmailTemplate/
 
 ---
 
-## ?? Security
+## Security
 
 ### Authorization
 - **View Permission** - See template list and preview
@@ -214,7 +214,7 @@ Amazing.Module.EmailTemplate/
 
 ---
 
-## ?? Configuration Requirements
+## Configuration Requirements
 
 ### SMTP Setup (Required for Email Delivery)
 
@@ -235,7 +235,7 @@ Amazing.Module.EmailTemplate/
 
 ---
 
-## ?? Database Schema
+## Database Schema
 
 **Table**: `AmazingEmailTemplate`
 
@@ -254,7 +254,7 @@ Amazing.Module.EmailTemplate/
 
 ---
 
-## ?? Template Variable Syntax
+## Template Variable Syntax
 
 Templates support dynamic content via double-brace variables:
 
@@ -289,7 +289,7 @@ Order #12345 total: $99.99
 
 ---
 
-## ?? API Reference
+## API Reference
 
 ### IEmailSendingService Methods
 
@@ -332,7 +332,7 @@ Task<List<TemplateInfo>> GetTemplatesByCategoryAsync(
 
 ---
 
-## ?? Testing
+## Testing
 
 ### Unit Testing
 ```csharp
@@ -370,7 +370,7 @@ public async Task SendEmail_WithValidTemplate_ReturnsSuccess()
 
 ---
 
-## ?? Troubleshooting
+## Troubleshooting
 
 ### Common Issues
 
@@ -390,7 +390,7 @@ A: Ensure JSON keys match variable names exactly (case-sensitive): `{{FirstName}
 
 ---
 
-## ?? Dependencies
+## Dependencies
 
 ### Runtime Dependencies
 - Oqtane Framework 10.0.4+
@@ -405,17 +405,17 @@ A: Ensure JSON keys match variable names exactly (case-sensitive): `{{FirstName}
 
 ---
 
-## ??? Roadmap
+## Roadmap
 
 ### Current Version (1.0.0)
-- ? Email template CRUD
-- ? Rich HTML editor
-- ? Template variables
-- ? Test email feature
-- ? Public email service API
-- ? Category management
-- ? Active/inactive status
-- ? Module portability
+- [x] Email template CRUD
+- [x] Rich HTML editor
+- [x] Template variables
+- [x] Test email feature
+- [x] Public email service API
+- [x] Category management
+- [x] Active/inactive status
+- [x] Module portability
 
 ### Future Enhancements
 - [ ] Variable picker dropdown
@@ -431,7 +431,7 @@ A: Ensure JSON keys match variable names exactly (case-sensitive): `{{FirstName}
 
 ---
 
-## ?? Contributing
+## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
 
@@ -450,13 +450,13 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 ---
 
-## ?? License
+## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ---
 
-## ?? Acknowledgments
+## Acknowledgments
 
 - **Oqtane Framework** - The amazing CMS/Application Framework this module is built for
 - **QuillJS** - Rich text editor integration
@@ -465,7 +465,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-## ?? Support
+## Support
 
 ### Documentation
 - [Integration Guide](INTEGRATION_GUIDE.md) - Complete API reference
@@ -482,7 +482,7 @@ Found a bug or have a feature request? Please [open an issue](../../issues).
 
 ---
 
-## ?? Stats
+## Stats
 
 - **Lines of Code**: ~1,800
 - **Public API Methods**: 4
@@ -495,7 +495,7 @@ Found a bug or have a feature request? Please [open an issue](../../issues).
 
 ---
 
-## ?? Learn More
+## Learn More
 
 ### About Oqtane
 [Oqtane](https://www.oqtane.org) is an open-source modular application framework for Blazor. It provides a robust foundation for building modern web applications with .NET.
@@ -511,13 +511,13 @@ This module demonstrates:
 
 ---
 
-## ? Star This Repository
+## Star This Repository
 
 If you find this module useful, please consider giving it a star! It helps others discover the project.
 
 ---
 
-## ?? Quick Links
+## Quick Links
 
 | Documentation | Link |
 |---------------|------|
@@ -532,7 +532,7 @@ If you find this module useful, please consider giving it a star! It helps other
 
 <div align="center">
 
-**Built with ?? for the Oqtane Community**
+**Built with love for the Oqtane Community**
 
 [Report Bug](../../issues) · [Request Feature](../../issues) · [Documentation](INTEGRATION_GUIDE.md)
 
