@@ -6,7 +6,7 @@ This guide shows **other Oqtane module developers** how to use the EmailTemplate
 
 ---
 
-## ? **Why Use This Module?**
+## ?? **Why Use This Module?**
 
 Instead of:
 - ? Writing SMTP code in every module
@@ -418,7 +418,7 @@ public async Task SendBulkEmails(List<User> users, string templateName)
 
 ---
 
-## ??? **Real-World Examples**
+## ?? **Real-World Examples**
 
 ### **Example 1: User Registration Module**
 
@@ -1006,7 +1006,7 @@ public async Task SendEmail_WithValidTemplate_ReturnsSuccess()
 
 ---
 
-## ?? **Integration Checklist**
+## ? **Integration Checklist**
 
 ### **For Module Developers**:
 
@@ -1030,7 +1030,7 @@ public async Task SendEmail_WithValidTemplate_ReturnsSuccess()
 
 ---
 
-## ?? **Performance Considerations**
+## ? **Performance Considerations**
 
 ### **Email Sending is Async**:
 - Emails queued via Notification system
@@ -1230,7 +1230,7 @@ Your module needs:
 
 ---
 
-## ?? **Getting Started Checklist**
+## ? **Getting Started Checklist**
 
 ### **One-Time Setup**:
 - [ ] Install EmailTemplate module
@@ -1269,24 +1269,32 @@ Your module needs:
 
 ---
 
-## ? **Summary**
+## ?? **Support**
 
-### **What You Get**:
-? Simple DI-based service (`IEmailSendingService`)  
-? No SMTP code in your module  
-? Template management via UI  
-? Variable replacement engine  
-? Rich HTML email support  
-? Centralized configuration  
+### **Common Integration Issues**:
 
-### **What You Need**:
-?? Reference to Shared DLL  
-?? Inject `IEmailSendingService`  
-?? Create templates via EmailTemplate module  
-?? Configure SMTP once (site-wide)  
+**Q: Service not found in DI container?**  
+A: Ensure EmailTemplate module is installed and ServerStartup.ConfigureServices registers it.
+
+**Q: Template not found at runtime?**  
+A: Template name is case-sensitive. Verify exact name in EmailTemplate module.
+
+**Q: Variables not replacing?**  
+A: Dictionary keys must match template exactly: `{{FirstName}}` requires `variables["FirstName"]`
+
+**Q: Email not arriving?**  
+A: Check SMTP configuration and NotificationJob. Email sending is asynchronous (1-2 min delay).
 
 ---
 
-**Your EmailTemplate module is now a reusable service for the entire Oqtane installation!** ??
+## ?? **Next Steps**
 
-**Questions?** Check the other documentation files or ask for specific integration scenarios!
+1. **Review INTEGRATION_GUIDE.md** for complete API reference
+2. **Create your templates** in EmailTemplate module UI
+3. **Add service injection** to your module
+4. **Test end-to-end** with real email delivery
+5. **Document variables** your templates need
+
+---
+
+**You're ready to integrate! Start sending templated emails from your module now!** ??

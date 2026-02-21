@@ -396,7 +396,7 @@ A: Verify SMTP configuration, check NotificationJob is enabled, wait 1-2 minutes
 **Q: Variables not replacing?**  
 A: Ensure JSON keys match variable names exactly (case-sensitive): `{{FirstName}}` requires `{"FirstName":"..."}`.
 
-**See [Troubleshooting Guide](INTEGRATION_GUIDE.md#troubleshooting) for more details.**
+**See [Troubleshooting Guide](INTEGRATION_GUIDE.md#-error-handling) for more details.**
 
 ---
 
