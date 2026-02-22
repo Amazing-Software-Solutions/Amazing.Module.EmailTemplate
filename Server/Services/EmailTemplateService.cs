@@ -37,11 +37,11 @@ namespace Amazing.Module.EmailTemplate.Services
         {
             if (_userPermissions.IsAuthorized(_accessor.HttpContext.User, _alias.SiteId, EntityNames.Module, ModuleId, PermissionNames.View))
             {
-                return Task.FromResult(_EmailTemplateRepository.GetEmailTemplates(ModuleId).ToList());
+                return Task.FromResult(_EmailTemplateRepository.GetEmailTemplates(_alias.SiteId).ToList());
             }
             else
             {
-                _logger.Log(LogLevel.Error, this, LogFunction.Security, "Unauthorized EmailTemplate Get Attempt {ModuleId}", ModuleId);
+                _logger.Log(LogLevel.Error, this, LogFunction.Security, "Unauthorized EmailTemplate Get Attempt {SiteId}", _alias.SiteId);
                 return null;
             }
         }
@@ -50,7 +50,16 @@ namespace Amazing.Module.EmailTemplate.Services
         {
             if (_userPermissions.IsAuthorized(_accessor.HttpContext.User, _alias.SiteId, EntityNames.Module, ModuleId, PermissionNames.View))
             {
-                return Task.FromResult(_EmailTemplateRepository.GetEmailTemplate(EmailTemplateId));
+                var template = _EmailTemplateRepository.GetEmailTemplate(EmailTemplateId);
+                if (template != null && template.SiteId == _alias.SiteId)
+                {
+                    return Task.FromResult(template);
+                }
+                else
+                {
+                    _logger.Log(LogLevel.Error, this, LogFunction.Security, "EmailTemplate Not Found Or Site Mismatch {EmailTemplateId}", EmailTemplateId);
+                    return null;
+                }
             }
             else
             {
@@ -59,25 +68,29 @@ namespace Amazing.Module.EmailTemplate.Services
             }
         }
 
-        public Task<Models.EmailTemplate> AddEmailTemplateAsync(Models.EmailTemplate EmailTemplate)
+        public Task<Models.EmailTemplate> AddEmailTemplateAsync(Models.EmailTemplate EmailTemplate, int ModuleId)
         {
-            if (_userPermissions.IsAuthorized(_accessor.HttpContext.User, _alias.SiteId, EntityNames.Module, EmailTemplate.ModuleId, PermissionNames.Edit))
+            if (_userPermissions.IsAuthorized(_accessor.HttpContext.User, _alias.SiteId, EntityNames.Module, ModuleId, PermissionNames.Edit))
             {
+                EmailTemplate.SiteId = _alias.SiteId;
                 EmailTemplate = _EmailTemplateRepository.AddEmailTemplate(EmailTemplate);
                 _logger.Log(LogLevel.Information, this, LogFunction.Create, "EmailTemplate Added {EmailTemplate}", EmailTemplate);
             }
             else
             {
-                _logger.Log(LogLevel.Error, this, LogFunction.Security, "Unauthorized EmailTemplate Add Attempt {EmailTemplate}", EmailTemplate);
+                _logger.Log(LogLevel.Error, this, LogFunction.Security, "Unauthorized EmailTemplate Add Attempt", EmailTemplate);
                 EmailTemplate = null;
             }
             return Task.FromResult(EmailTemplate);
         }
 
-        public Task<Models.EmailTemplate> UpdateEmailTemplateAsync(Models.EmailTemplate EmailTemplate)
+        public Task<Models.EmailTemplate> UpdateEmailTemplateAsync(Models.EmailTemplate EmailTemplate, int ModuleId)
         {
-            if (_userPermissions.IsAuthorized(_accessor.HttpContext.User, _alias.SiteId, EntityNames.Module, EmailTemplate.ModuleId, PermissionNames.Edit))
+            var existingTemplate = _EmailTemplateRepository.GetEmailTemplate(EmailTemplate.EmailTemplateId);
+            if (existingTemplate != null && existingTemplate.SiteId == _alias.SiteId && 
+                _userPermissions.IsAuthorized(_accessor.HttpContext.User, _alias.SiteId, EntityNames.Module, ModuleId, PermissionNames.Edit))
             {
+                EmailTemplate.SiteId = _alias.SiteId;
                 EmailTemplate = _EmailTemplateRepository.UpdateEmailTemplate(EmailTemplate);
                 _logger.Log(LogLevel.Information, this, LogFunction.Update, "EmailTemplate Updated {EmailTemplate}", EmailTemplate);
             }
@@ -91,7 +104,9 @@ namespace Amazing.Module.EmailTemplate.Services
 
         public Task DeleteEmailTemplateAsync(int EmailTemplateId, int ModuleId)
         {
-            if (_userPermissions.IsAuthorized(_accessor.HttpContext.User, _alias.SiteId, EntityNames.Module, ModuleId, PermissionNames.Edit))
+            var template = _EmailTemplateRepository.GetEmailTemplate(EmailTemplateId);
+            if (template != null && template.SiteId == _alias.SiteId &&
+                _userPermissions.IsAuthorized(_accessor.HttpContext.User, _alias.SiteId, EntityNames.Module, ModuleId, PermissionNames.Edit))
             {
                 _EmailTemplateRepository.DeleteEmailTemplate(EmailTemplateId);
                 _logger.Log(LogLevel.Information, this, LogFunction.Delete, "EmailTemplate Deleted {EmailTemplateId}", EmailTemplateId);
@@ -164,7 +179,6 @@ namespace Amazing.Module.EmailTemplate.Services
             }
             catch
             {
-                // If JSON parsing fails, return original content
             }
 
             return content;

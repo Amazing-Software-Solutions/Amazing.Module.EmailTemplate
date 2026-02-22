@@ -37,7 +37,7 @@ namespace Amazing.Module.EmailTemplate.Manager
         public string ExportModule(Oqtane.Models.Module module)
         {
             string content = "";
-            List<Models.EmailTemplate> EmailTemplates = _EmailTemplateRepository.GetEmailTemplates(module.ModuleId).ToList();
+            List<Models.EmailTemplate> EmailTemplates = _EmailTemplateRepository.GetEmailTemplates(module.SiteId).ToList();
             if (EmailTemplates != null)
             {
                 content = JsonSerializer.Serialize(EmailTemplates);
@@ -56,17 +56,21 @@ namespace Amazing.Module.EmailTemplate.Manager
             {
                 foreach(var EmailTemplate in EmailTemplates)
                 {
-                    _EmailTemplateRepository.AddEmailTemplate(new Models.EmailTemplate 
-                    { 
-                        ModuleId = module.ModuleId, 
-                        Name = EmailTemplate.Name,
-                        Description = EmailTemplate.Description,
-                        Subject = EmailTemplate.Subject,
-                        Body = EmailTemplate.Body,
-                        Category = EmailTemplate.Category,
-                        IsActive = EmailTemplate.IsActive,
-                        TemplateVariables = EmailTemplate.TemplateVariables
-                    });
+                    var existingTemplate = _EmailTemplateRepository.GetEmailTemplateByName(EmailTemplate.Name, module.SiteId);
+                    if (existingTemplate == null)
+                    {
+                        _EmailTemplateRepository.AddEmailTemplate(new Models.EmailTemplate 
+                        { 
+                            SiteId = module.SiteId, 
+                            Name = EmailTemplate.Name,
+                            Description = EmailTemplate.Description,
+                            Subject = EmailTemplate.Subject,
+                            Body = EmailTemplate.Body,
+                            Category = EmailTemplate.Category,
+                            IsActive = EmailTemplate.IsActive,
+                            TemplateVariables = EmailTemplate.TemplateVariables
+                        });
+                    }
                 }
             }
         }
@@ -75,7 +79,7 @@ namespace Amazing.Module.EmailTemplate.Manager
         {
            var searchContentList = new List<SearchContent>();
 
-           foreach (var EmailTemplate in _EmailTemplateRepository.GetEmailTemplates(pageModule.ModuleId))
+           foreach (var EmailTemplate in _EmailTemplateRepository.GetEmailTemplates(pageModule.Module.SiteId))
            {
                if (EmailTemplate.ModifiedOn >= lastIndexedOn)
                {

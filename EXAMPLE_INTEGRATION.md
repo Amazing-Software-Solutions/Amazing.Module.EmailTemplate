@@ -1,35 +1,37 @@
 # Example: Using EmailTemplate Module in Your Module
 
-## ?? Simple Integration Example
+## Simple Integration Example
 
 This is a **complete, copy-paste ready example** showing how to use the EmailTemplate module from another Oqtane module.
 
 ---
 
-## ?? File Structure
+## File Structure
 
 ```
 YourModule/
-??? Shared/
-?   ??? Models/
-?       ??? UserRegistration.cs
-??? Server/
-?   ??? Services/
-?   ?   ??? RegistrationService.cs  ? Email integration here
-?   ??? Controllers/
-?   ?   ??? RegistrationController.cs
-?   ??? Startup/
-?       ??? ServerStartup.cs
-??? Client/
-    ??? Modules/YourModule/
-        ??? Register.razor
+|-- Shared/
+|   +-- Models/
+|       +-- UserRegistration.cs
+|
+|-- Server/
+|   |-- Services/
+|   |   +-- RegistrationService.cs    # Email integration here
+|   |-- Controllers/
+|   |   +-- RegistrationController.cs
+|   +-- Startup/
+|       +-- ServerStartup.cs
+|
++-- Client/
+    +-- Modules/YourModule/
+        +-- Register.razor
 ```
 
 ---
 
-## ?? **Complete Code Example**
+## Complete Code Example
 
-### **1. Server Service (Business Logic)**
+### 1. Server Service (Business Logic)
 
 ```csharp
 // Server/Services/RegistrationService.cs
@@ -128,7 +130,7 @@ namespace YourModule.Services
 
 ---
 
-### **2. Controller (API)**
+### 2. Controller (API)
 
 ```csharp
 // Server/Controllers/RegistrationController.cs
@@ -173,7 +175,7 @@ namespace YourModule.Controllers
 
 ---
 
-### **3. Startup (Service Registration)**
+### 3. Startup (Service Registration)
 
 ```csharp
 // Server/Startup/ServerStartup.cs
@@ -200,7 +202,7 @@ namespace YourModule.Startup
 
 ---
 
-### **4. Client UI Component**
+### 4. Client UI Component
 
 ```razor
 <!-- Client/Modules/YourModule/Register.razor -->
@@ -265,18 +267,21 @@ namespace YourModule.Startup
 
 ---
 
-## ?? **Required Email Template**
+## Required Email Template
 
 Site admin creates this template in EmailTemplate module:
 
-```
-Name: User Welcome Email
-Category: Registration
-Description: Sent when new user registers
-Subject: Welcome to Our Site, {{FirstName}}!
-Variables: {{FirstName}},{{LastName}},{{Email}},{{Username}}
-Body: (Use Rich Text Editor)
-??????????????????????????????????????
+**Template Details**:
+
+- **Name**: `User Welcome Email`
+- **Category**: `Registration`
+- **Description**: `Sent when new user registers`
+- **Subject**: `Welcome to Our Site, {{FirstName}}!`
+- **TemplateVariables**: `{{FirstName}},{{LastName}},{{Email}},{{Username}}`
+- **Active**: ? Checked
+- **Body** (use Rich Text Editor):
+
+```html
 <h1>Welcome {{FirstName}} {{LastName}}!</h1>
 
 <p>Thank you for registering on our site.</p>
@@ -291,26 +296,28 @@ Body: (Use Rich Text Editor)
 
 <p>Best regards,<br>
 The Team</p>
-??????????????????????????????????????
-Active: ? (checked)
 ```
 
 ---
 
-## ? **Testing the Integration**
+## Testing the Integration
 
-### **Step 1: Install Both Modules**
+### Step 1: Install Both Modules
+
 1. Install EmailTemplate module
 2. Install Your module
 3. Both are now on the site
 
-### **Step 2: Create Template**
+### Step 2: Create Template
+
 1. Add EmailTemplate module to admin page
 2. Create "User Welcome Email" template
 3. Test it using "Send Test Email" feature
 4. Verify email arrives
+5. Set Active = true
 
-### **Step 3: Test Your Module**
+### Step 3: Test Your Module
+
 1. Add Your module to a page
 2. Register a test user
 3. Check logs: "Welcome Email Sent To..."
@@ -319,7 +326,7 @@ Active: ? (checked)
 
 ---
 
-## ?? **Variable Mapping Helper**
+## Variable Mapping Helper
 
 Create a helper class for consistent variable mapping:
 
@@ -359,6 +366,7 @@ namespace YourModule.Helpers
 ```
 
 **Usage**:
+
 ```csharp
 var variables = EmailVariableHelper.CreateUserVariables(user);
 variables = EmailVariableHelper.AddCustomVariables(
@@ -367,14 +375,14 @@ variables = EmailVariableHelper.AddCustomVariables(
     ("SiteName", siteName)
 );
 
-await _emailService.SendEmailByTemplateNameAsync(..., variables);
+await _emailService.SendEmailByTemplateNameAsync(siteId, templateName, email, variables);
 ```
 
 ---
 
-## ?? **Migration from Hardcoded Emails**
+## Migration from Hardcoded Emails
 
-### **Before (Hardcoded)**:
+### Before (Hardcoded)
 
 ```csharp
 var smtp = new SmtpClient("smtp.gmail.com", 587);
@@ -392,7 +400,7 @@ message.To.Add(user.Email);
 await smtp.SendMailAsync(message);
 ```
 
-### **After (Template-Based)**:
+### After (Template-Based)
 
 ```csharp
 var variables = new Dictionary<string, string>
@@ -410,33 +418,62 @@ await _emailService.SendEmailByTemplateNameAsync(
 ```
 
 **Benefits**:
-- ? No SMTP configuration in code
-- ? Template editable without redeployment
-- ? Uses Oqtane's notification infrastructure
-- ? Consistent styling across all emails
-- ? Logging and audit trail
+
+- No SMTP configuration in code
+- Template editable without redeployment
+- Uses Oqtane's notification infrastructure
+- Consistent styling across all emails
+- Logging and audit trail
+- Site-scoped reusability (v1.0.2)
 
 ---
 
-## ?? **Support**
+## Support
 
-### **Common Integration Issues**:
+### Common Integration Issues
 
-**Q: Service not found in DI container?**
+**Q: Service not found in DI container?**  
 A: Ensure EmailTemplate module is installed and ServerStartup.ConfigureServices registers it.
 
-**Q: Template not found at runtime?**
-A: Template name is case-sensitive. Verify exact name in EmailTemplate module.
+**Q: Template not found at runtime?**  
+A: Template name is case-sensitive. Verify exact name in EmailTemplate module. Verify template exists for the correct site.
 
-**Q: Variables not replacing?**
+**Q: Variables not replacing?**  
 A: Dictionary keys must match template exactly: `{{FirstName}}` requires `variables["FirstName"]`
 
-**Q: Email not arriving?**
+**Q: Email not arriving?**  
 A: Check SMTP configuration and NotificationJob. Email sending is asynchronous (1-2 min delay).
+
+**Q: Can I use templates from another site?**  
+A: No. Templates are site-scoped (v1.0.2) for security and multi-tenant isolation.
 
 ---
 
-## ?? **Next Steps**
+## Site Scoping Notes (v1.0.2)
+
+### Key Points
+
+- Templates are **site-scoped** (not module-scoped)
+- All modules in a site can access templates
+- Templates isolated per site (multi-tenant)
+- Create template once per site, use everywhere
+- Site admin manages templates centrally
+
+### Example
+
+```
+Site A (SiteId=1):
+  - EmailTemplate: "Welcome Email" (SiteId=1)
+  - All modules in Site A can use this template
+  
+Site B (SiteId=2):
+  - EmailTemplate: "Welcome Email" (SiteId=2)
+  - Separate template, isolated from Site A
+```
+
+---
+
+## Next Steps
 
 1. **Review INTEGRATION_GUIDE.md** for complete API reference
 2. **Create your templates** in EmailTemplate module UI
@@ -446,4 +483,4 @@ A: Check SMTP configuration and NotificationJob. Email sending is asynchronous (
 
 ---
 
-**You're ready to integrate! Start sending templated emails from your module now!** ??
+**You're ready to integrate! Start sending templated emails from your module now!**

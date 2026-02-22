@@ -13,9 +13,9 @@ namespace Amazing.Module.EmailTemplate.Services
 
         Task<Models.EmailTemplate> GetEmailTemplateAsync(int EmailTemplateId, int ModuleId);
 
-        Task<Models.EmailTemplate> AddEmailTemplateAsync(Models.EmailTemplate EmailTemplate);
+        Task<Models.EmailTemplate> AddEmailTemplateAsync(Models.EmailTemplate EmailTemplate, int ModuleId);
 
-        Task<Models.EmailTemplate> UpdateEmailTemplateAsync(Models.EmailTemplate EmailTemplate);
+        Task<Models.EmailTemplate> UpdateEmailTemplateAsync(Models.EmailTemplate EmailTemplate, int ModuleId);
 
         Task DeleteEmailTemplateAsync(int EmailTemplateId, int ModuleId);
 
@@ -39,14 +39,14 @@ namespace Amazing.Module.EmailTemplate.Services
             return await GetJsonAsync<Models.EmailTemplate>(CreateAuthorizationPolicyUrl($"{Apiurl}/{EmailTemplateId}/{ModuleId}", EntityNames.Module, ModuleId));
         }
 
-        public async Task<Models.EmailTemplate> AddEmailTemplateAsync(Models.EmailTemplate EmailTemplate)
+        public async Task<Models.EmailTemplate> AddEmailTemplateAsync(Models.EmailTemplate EmailTemplate, int ModuleId)
         {
-            return await PostJsonAsync<Models.EmailTemplate>(CreateAuthorizationPolicyUrl($"{Apiurl}", EntityNames.Module, EmailTemplate.ModuleId), EmailTemplate);
+            return await PostJsonAsync<Models.EmailTemplate>(CreateAuthorizationPolicyUrl($"{Apiurl}?moduleid={ModuleId}", EntityNames.Module, ModuleId), EmailTemplate);
         }
 
-        public async Task<Models.EmailTemplate> UpdateEmailTemplateAsync(Models.EmailTemplate EmailTemplate)
+        public async Task<Models.EmailTemplate> UpdateEmailTemplateAsync(Models.EmailTemplate EmailTemplate, int ModuleId)
         {
-            return await PutJsonAsync<Models.EmailTemplate>(CreateAuthorizationPolicyUrl($"{Apiurl}/{EmailTemplate.EmailTemplateId}", EntityNames.Module, EmailTemplate.ModuleId), EmailTemplate);
+            return await PutJsonAsync<Models.EmailTemplate>(CreateAuthorizationPolicyUrl($"{Apiurl}/{EmailTemplate.EmailTemplateId}?moduleid={ModuleId}", EntityNames.Module, ModuleId), EmailTemplate);
         }
 
         public async Task DeleteEmailTemplateAsync(int EmailTemplateId, int ModuleId)

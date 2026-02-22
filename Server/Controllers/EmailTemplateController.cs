@@ -45,13 +45,22 @@ namespace Amazing.Module.EmailTemplate.Controllers
         [Authorize(Policy = PolicyNames.ViewModule)]
         public async Task<Models.EmailTemplate> Get(int id, int moduleid)
         {
-            Models.EmailTemplate EmailTemplate = await _EmailTemplateService.GetEmailTemplateAsync(id, moduleid);
-            if (EmailTemplate != null && IsAuthorizedEntityId(EntityNames.Module, EmailTemplate.ModuleId))
+            if (IsAuthorizedEntityId(EntityNames.Module, moduleid))
             {
-                return EmailTemplate;
+                Models.EmailTemplate EmailTemplate = await _EmailTemplateService.GetEmailTemplateAsync(id, moduleid);
+                if (EmailTemplate != null)
+                {
+                    return EmailTemplate;
+                }
+                else
+                { 
+                    _logger.Log(LogLevel.Error, this, LogFunction.Security, "EmailTemplate Not Found Or Unauthorized {EmailTemplateId} {ModuleId}", id, moduleid);
+                    HttpContext.Response.StatusCode = (int)HttpStatusCode.Forbidden;
+                    return null;
+                }
             }
             else
-            { 
+            {
                 _logger.Log(LogLevel.Error, this, LogFunction.Security, "Unauthorized EmailTemplate Get Attempt {EmailTemplateId} {ModuleId}", id, moduleid);
                 HttpContext.Response.StatusCode = (int)HttpStatusCode.Forbidden;
                 return null;
@@ -61,15 +70,15 @@ namespace Amazing.Module.EmailTemplate.Controllers
         // POST api/<controller>
         [HttpPost]
         [Authorize(Policy = PolicyNames.EditModule)]
-        public async Task<Models.EmailTemplate> Post([FromBody] Models.EmailTemplate EmailTemplate)
+        public async Task<Models.EmailTemplate> Post([FromBody] Models.EmailTemplate EmailTemplate, [FromQuery] int moduleid)
         {
-            if (ModelState.IsValid && IsAuthorizedEntityId(EntityNames.Module, EmailTemplate.ModuleId))
+            if (ModelState.IsValid && IsAuthorizedEntityId(EntityNames.Module, moduleid))
             {
-                EmailTemplate = await _EmailTemplateService.AddEmailTemplateAsync(EmailTemplate);
+                EmailTemplate = await _EmailTemplateService.AddEmailTemplateAsync(EmailTemplate, moduleid);
             }
             else
             {
-                _logger.Log(LogLevel.Error, this, LogFunction.Security, "Unauthorized EmailTemplate Post Attempt {EmailTemplate}", EmailTemplate);
+                _logger.Log(LogLevel.Error, this, LogFunction.Security, "Unauthorized EmailTemplate Post Attempt {ModuleId}", moduleid);
                 HttpContext.Response.StatusCode = (int)HttpStatusCode.Forbidden;
                 EmailTemplate = null;
             }
@@ -79,15 +88,15 @@ namespace Amazing.Module.EmailTemplate.Controllers
         // PUT api/<controller>/5
         [HttpPut("{id}")]
         [Authorize(Policy = PolicyNames.EditModule)]
-        public async Task<Models.EmailTemplate> Put(int id, [FromBody] Models.EmailTemplate EmailTemplate)
+        public async Task<Models.EmailTemplate> Put(int id, [FromBody] Models.EmailTemplate EmailTemplate, [FromQuery] int moduleid)
         {
-            if (ModelState.IsValid && EmailTemplate.EmailTemplateId == id && IsAuthorizedEntityId(EntityNames.Module, EmailTemplate.ModuleId))
+            if (ModelState.IsValid && EmailTemplate.EmailTemplateId == id && IsAuthorizedEntityId(EntityNames.Module, moduleid))
             {
-                EmailTemplate = await _EmailTemplateService.UpdateEmailTemplateAsync(EmailTemplate);
+                EmailTemplate = await _EmailTemplateService.UpdateEmailTemplateAsync(EmailTemplate, moduleid);
             }
             else
             {
-                _logger.Log(LogLevel.Error, this, LogFunction.Security, "Unauthorized EmailTemplate Put Attempt {EmailTemplate}", EmailTemplate);
+                _logger.Log(LogLevel.Error, this, LogFunction.Security, "Unauthorized EmailTemplate Put Attempt {EmailTemplateId} {ModuleId}", id, moduleid);
                 HttpContext.Response.StatusCode = (int)HttpStatusCode.Forbidden;
                 EmailTemplate = null;
             }
@@ -99,10 +108,9 @@ namespace Amazing.Module.EmailTemplate.Controllers
         [Authorize(Policy = PolicyNames.EditModule)]
         public async Task Delete(int id, int moduleid)
         {
-            Models.EmailTemplate EmailTemplate = await _EmailTemplateService.GetEmailTemplateAsync(id, moduleid);
-            if (EmailTemplate != null && IsAuthorizedEntityId(EntityNames.Module, EmailTemplate.ModuleId))
+            if (IsAuthorizedEntityId(EntityNames.Module, moduleid))
             {
-                await _EmailTemplateService.DeleteEmailTemplateAsync(id, EmailTemplate.ModuleId);
+                await _EmailTemplateService.DeleteEmailTemplateAsync(id, moduleid);
             }
             else
             {
