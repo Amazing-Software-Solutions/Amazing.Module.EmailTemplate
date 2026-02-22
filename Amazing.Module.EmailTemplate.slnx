@@ -47,6 +47,19 @@
   <Folder Name="/.amazonq/rules/">
     <File Path=".amazonq/rules/instructions.md" />
   </Folder>
+  <Folder Name="/Documentation/">
+    <File Path="DATAMODEL_ENHANCEMENT.md" />
+    <File Path="DATASCOPING_MIGRATION.md" />
+    <File Path="DIAGNOSTIC_HELPER.md" />
+    <File Path="EXAMPLE_INTEGRATION.md" />
+    <File Path="INTEGRATION_GUIDE.md" />
+    <File Path="MODULE_COMPLETE_SUMMARY.md" />
+    <File Path="QUICKSTART_GUIDE.md" />
+    <File Path="REFACTORING_COMPLETE.md" />
+    <File Path="RICHTEXTEDITOR_INTEGRATION.md" />
+    <File Path="SITESCOPING_SUMMARY.md" />
+    <File Path="VISUAL_GUIDE.md" />
+  </Folder>
   <Folder Name="/_Oqtane/">
     <Project Path="../oqtane.framework/Oqtane.Client/Oqtane.Client.csproj" />
     <Project Path="../oqtane.framework/Oqtane.Shared/Oqtane.Shared.csproj" />
