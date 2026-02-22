@@ -7,15 +7,15 @@ namespace Amazing.Module.EmailTemplate.Repository
 {
     public interface IEmailTemplateRepository
     {
-        IEnumerable<Models.EmailTemplate> GetEmailTemplates(int ModuleId);
+        IEnumerable<Models.EmailTemplate> GetEmailTemplates(int SiteId);
         Models.EmailTemplate GetEmailTemplate(int EmailTemplateId);
         Models.EmailTemplate GetEmailTemplate(int EmailTemplateId, bool tracking);
         Models.EmailTemplate AddEmailTemplate(Models.EmailTemplate EmailTemplate);
         Models.EmailTemplate UpdateEmailTemplate(Models.EmailTemplate EmailTemplate);
         void DeleteEmailTemplate(int EmailTemplateId);
-        Models.EmailTemplate GetEmailTemplateByName(string templateName, int? moduleId = null);
-        IEnumerable<Models.EmailTemplate> GetActiveEmailTemplates();
-        IEnumerable<Models.EmailTemplate> GetEmailTemplatesByCategory(string category);
+        Models.EmailTemplate GetEmailTemplateByName(string templateName, int siteId);
+        IEnumerable<Models.EmailTemplate> GetActiveEmailTemplates(int siteId);
+        IEnumerable<Models.EmailTemplate> GetEmailTemplatesByCategory(string category, int siteId);
     }
 
     public class EmailTemplateRepository : IEmailTemplateRepository, ITransientService
@@ -27,10 +27,10 @@ namespace Amazing.Module.EmailTemplate.Repository
             _factory = factory;
         }
 
-        public IEnumerable<Models.EmailTemplate> GetEmailTemplates(int ModuleId)
+        public IEnumerable<Models.EmailTemplate> GetEmailTemplates(int SiteId)
         {
             using var db = _factory.CreateDbContext();
-            return db.EmailTemplate.Where(item => item.ModuleId == ModuleId).ToList();
+            return db.EmailTemplate.Where(item => item.SiteId == SiteId).ToList();
         }
 
         public Models.EmailTemplate GetEmailTemplate(int EmailTemplateId)
@@ -75,29 +75,24 @@ namespace Amazing.Module.EmailTemplate.Repository
             db.SaveChanges();
         }
 
-        public Models.EmailTemplate GetEmailTemplateByName(string templateName, int? moduleId = null)
+        public Models.EmailTemplate GetEmailTemplateByName(string templateName, int siteId)
         {
             using var db = _factory.CreateDbContext();
-            var query = db.EmailTemplate.Where(item => item.Name == templateName && item.IsActive);
-            
-            if (moduleId.HasValue)
-            {
-                query = query.Where(item => item.ModuleId == moduleId.Value);
-            }
-            
-            return query.FirstOrDefault();
+            return db.EmailTemplate
+                .Where(item => item.Name == templateName && item.IsActive && item.SiteId == siteId)
+                .FirstOrDefault();
         }
 
-        public IEnumerable<Models.EmailTemplate> GetActiveEmailTemplates()
+        public IEnumerable<Models.EmailTemplate> GetActiveEmailTemplates(int siteId)
         {
             using var db = _factory.CreateDbContext();
-            return db.EmailTemplate.Where(item => item.IsActive).ToList();
+            return db.EmailTemplate.Where(item => item.IsActive && item.SiteId == siteId).ToList();
         }
 
-        public IEnumerable<Models.EmailTemplate> GetEmailTemplatesByCategory(string category)
+        public IEnumerable<Models.EmailTemplate> GetEmailTemplatesByCategory(string category, int siteId)
         {
             using var db = _factory.CreateDbContext();
-            return db.EmailTemplate.Where(item => item.Category == category && item.IsActive).ToList();
+            return db.EmailTemplate.Where(item => item.Category == category && item.IsActive && item.SiteId == siteId).ToList();
         }
     }
 }

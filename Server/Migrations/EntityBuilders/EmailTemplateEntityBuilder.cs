@@ -11,19 +11,19 @@ namespace Amazing.Module.EmailTemplate.Migrations.EntityBuilders
     {
         private const string _entityTableName = "AmazingEmailTemplate";
         private readonly PrimaryKey<EmailTemplateEntityBuilder> _primaryKey = new("PK_AmazingEmailTemplate", x => x.EmailTemplateId);
-        private readonly ForeignKey<EmailTemplateEntityBuilder> _moduleForeignKey = new("FK_AmazingEmailTemplate_Module", x => x.ModuleId, "Module", "ModuleId", ReferentialAction.Cascade);
+        private readonly ForeignKey<EmailTemplateEntityBuilder> _siteForeignKey = new("FK_AmazingEmailTemplate_Site", x => x.SiteId, "Site", "SiteId", ReferentialAction.Cascade);
 
         public EmailTemplateEntityBuilder(MigrationBuilder migrationBuilder, IDatabase database) : base(migrationBuilder, database)
         {
             EntityTableName = _entityTableName;
             PrimaryKey = _primaryKey;
-            ForeignKeys.Add(_moduleForeignKey);
+            ForeignKeys.Add(_siteForeignKey);
         }
 
         protected override EmailTemplateEntityBuilder BuildTable(ColumnsBuilder table)
         {
             EmailTemplateId = AddAutoIncrementColumn(table,"EmailTemplateId");
-            ModuleId = AddIntegerColumn(table,"ModuleId");
+            SiteId = AddIntegerColumn(table,"SiteId");
             Name = AddMaxStringColumn(table,"Name");
             Description = AddStringColumn(table, "Description", 500, true);
             Subject = AddStringColumn(table, "Subject", 200);
@@ -36,7 +36,7 @@ namespace Amazing.Module.EmailTemplate.Migrations.EntityBuilders
         }
 
         public OperationBuilder<AddColumnOperation> EmailTemplateId { get; set; }
-        public OperationBuilder<AddColumnOperation> ModuleId { get; set; }
+        public OperationBuilder<AddColumnOperation> SiteId { get; set; }
         public OperationBuilder<AddColumnOperation> Name { get; set; }
         public OperationBuilder<AddColumnOperation> Description { get; set; }
         public OperationBuilder<AddColumnOperation> Subject { get; set; }

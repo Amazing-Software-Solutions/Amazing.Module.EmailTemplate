@@ -10,7 +10,7 @@ namespace Amazing.Module.EmailTemplate.Models
         [Key]
         public int EmailTemplateId { get; set; }
         
-        public int ModuleId { get; set; }
+        public int SiteId { get; set; }
         
         [Required(ErrorMessage = "Name is required")]
         [StringLength(100, ErrorMessage = "Name cannot exceed 100 characters")]

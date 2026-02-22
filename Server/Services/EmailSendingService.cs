@@ -48,12 +48,12 @@ namespace Amazing.Module.EmailTemplate.Services
                     });
                 }
 
-                var template = _templateRepository.GetEmailTemplateByName(templateName);
+                var template = _templateRepository.GetEmailTemplateByName(templateName, siteId);
 
                 if (template == null)
                 {
                     _logger.Log(LogLevel.Warning, this, LogFunction.Other, 
-                        "Email Template Not Found {TemplateName}", templateName);
+                        "Email Template Not Found {TemplateName} {SiteId}", templateName, siteId);
                     return Task.FromResult(new Models.EmailSendResult 
                     { 
                         Success = false, 
@@ -95,14 +95,14 @@ namespace Amazing.Module.EmailTemplate.Services
 
                 var template = _templateRepository.GetEmailTemplate(templateId, false);
 
-                if (template == null)
+                if (template == null || template.SiteId != siteId)
                 {
                     _logger.Log(LogLevel.Warning, this, LogFunction.Other, 
-                        "Email Template Not Found {TemplateId}", templateId);
+                        "Email Template Not Found Or Site Mismatch {TemplateId} {SiteId}", templateId, siteId);
                     return Task.FromResult(new Models.EmailSendResult 
                     { 
                         Success = false, 
-                        Message = $"Template ID {templateId} not found" 
+                        Message = $"Template ID {templateId} not found or does not belong to site" 
                     });
                 }
 
@@ -163,7 +163,7 @@ namespace Amazing.Module.EmailTemplate.Services
                     return Task.FromResult(new List<Models.TemplateInfo>());
                 }
 
-                var templates = _templateRepository.GetActiveEmailTemplates()
+                var templates = _templateRepository.GetActiveEmailTemplates(siteId)
                     .Select(t => new Models.TemplateInfo
                     {
                         TemplateId = t.EmailTemplateId,
@@ -193,7 +193,7 @@ namespace Amazing.Module.EmailTemplate.Services
                     return Task.FromResult(new List<Models.TemplateInfo>());
                 }
 
-                var templates = _templateRepository.GetEmailTemplatesByCategory(category)
+                var templates = _templateRepository.GetEmailTemplatesByCategory(category, siteId)
                     .Select(t => new Models.TemplateInfo
                     {
                         TemplateId = t.EmailTemplateId,

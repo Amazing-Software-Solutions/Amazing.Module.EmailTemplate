@@ -165,7 +165,7 @@
                 if (PageState.Action == "Add")
                 {
                     EmailTemplate EmailTemplate = new EmailTemplate();
-                    EmailTemplate.ModuleId = ModuleState.ModuleId;
+                    EmailTemplate.SiteId = PageState.Site.SiteId;
                     EmailTemplate.Name = _name;
                     EmailTemplate.Description = _description;
                     EmailTemplate.Category = _category;
@@ -173,7 +173,7 @@
                     EmailTemplate.Body = body;
                     EmailTemplate.TemplateVariables = _templateVariables;
                     EmailTemplate.IsActive = _isActive;
-                    EmailTemplate = await EmailTemplateService.AddEmailTemplateAsync(EmailTemplate);
+                    EmailTemplate = await EmailTemplateService.AddEmailTemplateAsync(EmailTemplate, ModuleState.ModuleId);
                     await logger.LogInformation("EmailTemplate Added {EmailTemplate}", EmailTemplate);
                 }
                 else
@@ -186,7 +186,7 @@
                     EmailTemplate.Body = body;
                     EmailTemplate.TemplateVariables = _templateVariables;
                     EmailTemplate.IsActive = _isActive;
-                    await EmailTemplateService.UpdateEmailTemplateAsync(EmailTemplate);
+                    await EmailTemplateService.UpdateEmailTemplateAsync(EmailTemplate, ModuleState.ModuleId);
                     await logger.LogInformation("EmailTemplate Updated {EmailTemplate}", EmailTemplate);
                 }
                 NavigationManager.NavigateTo(NavigateUrl());
