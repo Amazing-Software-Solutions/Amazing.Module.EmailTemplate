@@ -69,7 +69,9 @@ public async Task SendWelcomeEmail(User user)
         templateName: "User Welcome Email",
         toEmail: user.Email,
         variables: variables,
-        toDisplayName: user.DisplayName
+        toDisplayName: user.DisplayName,
+        fromDisplayName: "Support Team",          // Optional: sender display name
+        fromEmail: "noreply@yoursite.com"          // Optional: sender email address
     );
 
     if (!result.Success)
@@ -92,7 +94,9 @@ Task<EmailSendResult> SendEmailByTemplateNameAsync(
     string templateName,                 // Template name (e.g., "User Welcome Email")
     string toEmail,                      // Recipient email
     Dictionary<string, string> variables,  // Variables to replace
-    string toDisplayName = null          // Optional recipient display name
+    string toDisplayName = null,         // Optional recipient display name
+    string fromDisplayName = null,       // Optional sender display name (defaults to site name)
+    string fromEmail = null              // Optional sender email address
 )
 ```
 
@@ -111,7 +115,9 @@ await _emailService.SendEmailByTemplateNameAsync(
         { "OrderTotal", order.Total.ToString("C") },
         { "CustomerName", customer.Name }
     },
-    customer.Name
+    customer.Name,
+    "Sales Team",                        // Optional: from display name
+    "orders@yourstore.com"               // Optional: from email
 );
 ```
 
@@ -125,7 +131,9 @@ Task<EmailSendResult> SendEmailByTemplateIdAsync(
     int templateId,                      // Specific template ID
     string toEmail,
     Dictionary<string, string> variables,
-    string toDisplayName = null
+    string toDisplayName = null,         // Optional recipient display name
+    string fromDisplayName = null,       // Optional sender display name (defaults to site name)
+    string fromEmail = null              // Optional sender email address
 )
 ```
 
@@ -200,10 +208,73 @@ if (onboardingTemplates.Any())
         siteId,
         onboardingTemplates.First().TemplateId,
         user.Email,
-        variables
+        variables,
+        user.DisplayName,
+        \"Onboarding Team\",              // Optional: from display name
+        \"onboarding@yoursite.com\"        // Optional: from email
     );
 }
 ```
+
+---
+
+## Sender Customization
+
+### Specifying From Address
+
+Both `SendEmailByTemplateNameAsync` and `SendEmailByTemplateIdAsync` now support optional sender parameters:
+
+**Parameters**:
+- `fromDisplayName` - The sender's display name (e.g., "Support Team", "Sales Department")
+- `fromEmail` - The sender's email address (e.g., "noreply@yoursite.com")
+
+**Default Behavior**:
+- If `fromDisplayName` is not provided, defaults to the site name
+- If `fromEmail` is not provided, defaults to empty string (system will use SMTP configuration)
+
+**Example - Department-Specific Sender**:
+
+```csharp
+// Support team email
+await _emailService.SendEmailByTemplateNameAsync(
+    siteId,
+    "Support Ticket Created",
+    customer.Email,
+    variables,
+    customer.Name,
+    \"Technical Support\",
+    \"support@yourcompany.com\"
+);
+
+// Sales team email
+await _emailService.SendEmailByTemplateNameAsync(
+    siteId,
+    \"Quote Generated\",
+    prospect.Email,
+    variables,
+    prospect.Name,
+    \"Sales Team\",
+    \"sales@yourcompany.com\"
+);
+
+// Automated system email
+await _emailService.SendEmailByTemplateNameAsync(
+    siteId,
+    \"Account Verification\",
+    user.Email,
+    variables,
+    user.DisplayName,
+    \"System\",
+    \"noreply@yourcompany.com\"
+);
+```
+
+**Best Practices**:
+- Use descriptive sender names that identify the department or purpose
+- Use dedicated email addresses for different types of notifications
+- Consider using \"noreply@\" addresses for automated emails
+- Ensure sender email addresses are properly configured in your email system
+- Test sender addresses to avoid spam filters
 
 ---
 

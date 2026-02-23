@@ -17,13 +17,17 @@ namespace Amazing.Module.EmailTemplate.Services
         /// <param name="toEmail">Recipient email address</param>
         /// <param name="variables">Dictionary of variables to replace (key = variable name without braces)</param>
         /// <param name="toDisplayName">Optional recipient display name</param>
+        /// <param name="fromDisplayName">Optional sender display name (defaults to site name)</param>
+        /// <param name="fromEmail">Optional sender email address (defaults to empty string)</param>
         /// <returns>Result with success status and notification ID</returns>
         Task<Models.EmailSendResult> SendEmailByTemplateNameAsync(
             int siteId, 
             string templateName, 
             string toEmail, 
             Dictionary<string, string> variables, 
-            string toDisplayName = null);
+            string toDisplayName = null,
+            string fromDisplayName = null,
+            string fromEmail = null);
         
         /// <summary>
         /// Send email using a template by ID
@@ -33,13 +37,17 @@ namespace Amazing.Module.EmailTemplate.Services
         /// <param name="toEmail">Recipient email address</param>
         /// <param name="variables">Dictionary of variables to replace</param>
         /// <param name="toDisplayName">Optional recipient display name</param>
+        /// <param name="fromDisplayName">Optional sender display name (defaults to site name)</param>
+        /// <param name="fromEmail">Optional sender email address (defaults to empty string)</param>
         /// <returns>Result with success status and notification ID</returns>
         Task<Models.EmailSendResult> SendEmailByTemplateIdAsync(
             int siteId, 
             int templateId, 
             string toEmail, 
             Dictionary<string, string> variables, 
-            string toDisplayName = null);
+            string toDisplayName = null,
+            string fromDisplayName = null,
+            string fromEmail = null);
         
         /// <summary>
         /// Get list of available active templates for a site
