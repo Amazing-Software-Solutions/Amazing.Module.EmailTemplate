@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
-    <Version>1.0.2</Version>
+    <Version>1.0.3</Version>
     <Product>Amazing.Module.EmailTemplate</Product>
     <Authors>Vineet Belani (vnetonline)</Authors>
     <Company>Amazing Software Solutions Pty Limited</Company>
