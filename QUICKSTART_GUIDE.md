@@ -155,10 +155,10 @@ Amazing.Module.EmailTemplate/
 User Clicks "Send Test Email"
   |
   v
-Client Service ? API Controller ? Server Service
+Client Service :arrow_right: API Controller :arrow_right: Server Service
   |
   v
-Variable Replacement ({{Name}} ? "John")
+Variable Replacement ({{Name}} :arrow_right: "John")
   |
   v
 Create Notification Record
@@ -211,7 +211,7 @@ Get-Process dotnet | Stop-Process -Force
 
 ```
 Press: Ctrl + Shift + R (hard refresh)
-Or: Ctrl + Shift + Delete ? Clear cache
+Or: Ctrl + Shift + Delete :arrow_right: Clear cache
 ```
 
 ---

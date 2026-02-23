@@ -403,7 +403,7 @@ This is appropriate because:
 ### Editor Not Appearing
 
 - Check browser console for JavaScript errors
-- Verify QuillJS resources loaded (F12 ? Network tab)
+- Verify QuillJS resources loaded (F12 :arrow_right: Network tab)
 - Confirm module CSS is referenced
 
 ### Content Not Saving

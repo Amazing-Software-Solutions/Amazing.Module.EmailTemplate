@@ -35,7 +35,9 @@ namespace Amazing.Module.EmailTemplate.Services
             string templateName, 
             string toEmail, 
             Dictionary<string, string> variables, 
-            string toDisplayName = null)
+            string toDisplayName = null,
+            string fromDisplayName = null,
+            string fromEmail = null)
         {
             try
             {
@@ -61,7 +63,7 @@ namespace Amazing.Module.EmailTemplate.Services
                     });
                 }
 
-                return SendEmailByTemplateIdAsync(siteId, template.EmailTemplateId, toEmail, variables, toDisplayName);
+                return SendEmailByTemplateIdAsync(siteId, template.EmailTemplateId, toEmail, variables, toDisplayName, fromDisplayName, fromEmail);
             }
             catch (Exception ex)
             {
@@ -80,7 +82,9 @@ namespace Amazing.Module.EmailTemplate.Services
             int templateId, 
             string toEmail, 
             Dictionary<string, string> variables, 
-            string toDisplayName = null)
+            string toDisplayName = null,
+            string fromDisplayName = null,
+            string fromEmail = null)
         {
             try
             {
@@ -120,10 +124,15 @@ namespace Amazing.Module.EmailTemplate.Services
                 string subject = ReplaceVariables(template.Subject, variables);
                 string body = ReplaceVariables(template.Body, variables);
 
+                // Use provided fromDisplayName or default to site name
+                string senderDisplayName = fromDisplayName ?? _alias.Name;
+                // Use provided fromEmail or default to empty string
+                string senderEmail = fromEmail ?? string.Empty;
+
                 var notification = new Notification(
                     siteId,
-                    _alias.Name,
-                    string.Empty,
+                    senderDisplayName,
+                    senderEmail,
                     toDisplayName ?? string.Empty,
                     toEmail,
                     subject,
@@ -133,7 +142,7 @@ namespace Amazing.Module.EmailTemplate.Services
                 notification = _notificationRepository.AddNotification(notification);
 
                 _logger.Log(LogLevel.Information, this, LogFunction.Create, 
-                    "Email Queued Via Template {TemplateName} To {Email}", template.Name, toEmail);
+                    "Email Queued Via Template {TemplateName} To {Email} From {FromEmail}", template.Name, toEmail, senderEmail);
 
                 return Task.FromResult(new Models.EmailSendResult 
                 { 

@@ -14,9 +14,9 @@ Based on [Oqtane Data Scoping Blog](https://www.oqtane.org/blog/!/72/data-scopin
 
 1. **Installation Scope** - Global (all tenants)
 2. **Tenant Scope** - Database-level (all sites in tenant)
-3. **Site Scope** - Site-level (most common for shared resources) ? **We use this**
+3. **Site Scope** - Site-level (most common for shared resources) :arrow_left: **We use this**
 4. **Page Scope** - Page-level (page-specific settings)
-5. **Module Scope** - Module instance-level (instance-specific data) ? **Was using this**
+5. **Module Scope** - Module instance-level (instance-specific data) :arrow_left: **Was using this**
 6. **Page/Module Scope** - Combination (module on specific page)
 7. **User Scope** - User-level (user personalization)
 
@@ -28,13 +28,13 @@ Email templates are **shared resources** that should be available to:
 - All pages within the site
 - Any module that needs to send emails
 
-**Correct Scope**: **Site Scope (Level 3)** ?
+**Correct Scope**: **Site Scope (Level 3)** :white_check_mark:
 
 - Templates managed once per site
 - Available to all modules in the site
 - Isolated by site (multi-tenant safe)
 
-**Incorrect Scope**: ~~Module Scope (Level 5)~~ ?
+**Incorrect Scope**: ~~Module Scope (Level 5)~~ :x:
 
 - Would create separate templates per module instance
 - Would require duplicating templates across modules
@@ -48,9 +48,9 @@ Email templates are **shared resources** that should be available to:
 
 **File**: `Server/Migrations/01000002_ChangeScopeToSiteId.cs`
 
-- Renamed column: `ModuleId` ? `SiteId`
-- Changed foreign key: `FK_AmazingEmailTemplate_Module` ? `FK_AmazingEmailTemplate_Site`
-- References: `Module.ModuleId` ? `Site.SiteId`
+- Renamed column: `ModuleId` :arrow_right: `SiteId`
+- Changed foreign key: `FK_AmazingEmailTemplate_Module` :arrow_right: `FK_AmazingEmailTemplate_Site`
+- References: `Module.ModuleId` :arrow_right: `Site.SiteId`
 - Down() method: Fully reversible
 
 ### 2. Entity Model
@@ -158,17 +158,17 @@ ReleaseVersions = "1.0.0,1.0.1,1.0.2"
 
 ### What Changed
 
-? Data is now site-scoped instead of module-scoped  
-? Templates shared across all modules in a site  
-? Multi-tenant isolation maintained (by SiteId)  
-? Migration handles schema change automatically  
+:white_check_mark: Data is now site-scoped instead of module-scoped  
+:white_check_mark: Templates shared across all modules in a site  
+:white_check_mark: Multi-tenant isolation maintained (by SiteId)  
+:white_check_mark: Migration handles schema change automatically  
 
 ### What Stayed the Same
 
-? UI authorization (still module-based permissions)  
-? API endpoints (still use moduleid parameter for auth)  
-? User experience (no visible changes)  
-? IEmailSendingService API (already used siteId)  
+:white_check_mark: UI authorization (still module-based permissions)  
+:white_check_mark: API endpoints (still use moduleid parameter for auth)  
+:white_check_mark: User experience (no visible changes)  
+:white_check_mark: IEmailSendingService API (already used siteId)
 
 ### Why Authorization Still Uses ModuleId
 
@@ -311,24 +311,24 @@ Site A:
   |   +-- EmailTemplate: "Welcome Email" (ID 1, ModuleId=10)
   |
   +-- Module Instance 2 (Contact Form)
-      +-- EmailTemplate: "Welcome Email" (ID 2, ModuleId=11)  ? Duplicate!
-    
-? Problem: Duplicated templates, harder to maintain
+      +-- EmailTemplate: "Welcome Email" (ID 2, ModuleId=11)  :x: Duplicate!
+
+:x: Problem: Duplicated templates, harder to maintain
 ```
 
 ### After (Site Scoped)
 
 ```
 Site A:
-  |-- EmailTemplate: "Welcome Email" (ID 1, SiteId=1) ?
+  |-- EmailTemplate: "Welcome Email" (ID 1, SiteId=1) :white_check_mark:
   |
   +-- All modules in Site A can use it:
       |-- Registration module
       |-- Contact module
       |-- E-commerce module
       +-- Any other module via IEmailSendingService
-    
-? Benefit: Single source of truth, shared across site
+
+:white_check_mark: Benefit: Single source of truth, shared across site
 ```
 
 ---
@@ -369,15 +369,15 @@ WHERE SiteId IN (SELECT ModuleId FROM [Module]);
 
 ### Migration Rules (027x-migrations.md)
 
-? **Rule 1**: Migration executes automatically on startup  
-? **Rule 2**: Version `01000002` follows 8-digit format  
-? **Rule 3**: Inherits `MultiDatabaseMigration`, proper attributes  
-? **Rule 4**: EntityBuilder updated appropriately  
-? **Rule 5**: `Up()` uses database-agnostic operations  
-? **Rule 6**: `Down()` fully reverses `Up()`  
-? **Rule 7**: Uses standard EF Core operations  
-? **Rule 8**: Model synchronized with schema  
-? **Rule 9**: `ReleaseVersion` updated to 1.0.2  
+:white_check_mark: **Rule 1**: Migration executes automatically on startup  
+:white_check_mark: **Rule 2**: Version `01000002` follows 8-digit format  
+:white_check_mark: **Rule 3**: Inherits `MultiDatabaseMigration`, proper attributes  
+:white_check_mark: **Rule 4**: EntityBuilder updated appropriately  
+:white_check_mark: **Rule 5**: `Up()` uses database-agnostic operations  
+:white_check_mark: **Rule 6**: `Down()` fully reverses `Up()`  
+:white_check_mark: **Rule 7**: Uses standard EF Core operations  
+:white_check_mark: **Rule 8**: Model synchronized with schema  
+:white_check_mark: **Rule 9**: `ReleaseVersion` updated to 1.0.2
 
 ---
 
@@ -445,12 +445,12 @@ Amazing.Module.EmailTemplate/
 
 ## Summary
 
-**Change**: ModuleId ? SiteId  
+**Change**: ModuleId :arrow_right: SiteId  
 **Reason**: Email templates are site-wide shared resources  
 **Scope**: Site Scope (Level 3) in Oqtane architecture  
 **Impact**: Templates now available to all modules in site  
 **Migration**: Version 1.0.2, automatic execution  
-**Testing**: Verify site isolation and multi-tenant support  
+**Testing**: Verify site isolation and multi-tenant support
 
 ---
 

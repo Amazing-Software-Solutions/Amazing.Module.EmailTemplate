@@ -61,8 +61,12 @@
     <File Path="VISUAL_GUIDE.md" />
   </Folder>
   <Folder Name="/_Oqtane/">
-    <Project Path="../oqtane.framework/Oqtane.Client/Oqtane.Client.csproj" />
-    <Project Path="../oqtane.framework/Oqtane.Shared/Oqtane.Shared.csproj" />
+    <Project Path="../oqtane.framework/Oqtane.Client/Oqtane.Client.csproj">
+      <Build Solution="Debug|*" Project="false" />
+    </Project>
+    <Project Path="../oqtane.framework/Oqtane.Shared/Oqtane.Shared.csproj">
+      <Build Solution="Debug|*" Project="false" />
+    </Project>
     <Project Path="..\oqtane.framework\Oqtane.Server\Oqtane.Server.csproj">
       <Build Solution="Debug|*" Project="false" />
     </Project>

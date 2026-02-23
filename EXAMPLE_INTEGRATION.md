@@ -42,7 +42,7 @@ using Oqtane.Enums;
 using Oqtane.Infrastructure;
 using Oqtane.Models;
 using Oqtane.Repository;
-using Amazing.Module.EmailTemplate.Services;  // ? Import this
+using Amazing.Module.EmailTemplate.Services;  // :arrow_left: Import this
 
 namespace YourModule.Services
 {
@@ -54,12 +54,12 @@ namespace YourModule.Services
     public class ServerRegistrationService : IRegistrationService
     {
         private readonly IUserRepository _userRepository;
-        private readonly IEmailSendingService _emailService;  // ? Inject this
+        private readonly IEmailSendingService _emailService;  // :arrow_left: Inject this
         private readonly ILogManager _logger;
 
         public ServerRegistrationService(
             IUserRepository userRepository,
-            IEmailSendingService emailService,  // ? Add to constructor
+            IEmailSendingService emailService,  // :arrow_left: Add to constructor
             ILogManager logger)
         {
             _userRepository = userRepository;
@@ -95,10 +95,12 @@ namespace YourModule.Services
 
                 var emailResult = await _emailService.SendEmailByTemplateNameAsync(
                     siteId,
-                    "User Welcome Email",  // ? Template name
+                    "User Welcome Email",  // :arrow_left: Template name
                     email,
                     variables,
-                    user.DisplayName
+                    user.DisplayName,
+                    "Registration Team",           // Optional: from display name
+                    "welcome@yoursite.com"         // Optional: from email address
                 );
 
                 // Step 3: Log result (don't fail registration if email fails)
@@ -278,7 +280,7 @@ Site admin creates this template in EmailTemplate module:
 - **Description**: `Sent when new user registers`
 - **Subject**: `Welcome to Our Site, {{FirstName}}!`
 - **TemplateVariables**: `{{FirstName}},{{LastName}},{{Email}},{{Username}}`
-- **Active**: ? Checked
+- **Active**: :white_check_mark: Checked
 - **Body** (use Rich Text Editor):
 
 ```html
@@ -375,7 +377,77 @@ variables = EmailVariableHelper.AddCustomVariables(
     ("SiteName", siteName)
 );
 
-await _emailService.SendEmailByTemplateNameAsync(siteId, templateName, email, variables);
+await _emailService.SendEmailByTemplateNameAsync(
+    siteId, 
+    templateName, 
+    email, 
+    variables,
+    user.DisplayName,
+    "Customer Support",
+    "support@yoursite.com"
+);
+```
+
+---
+
+## Customizing Sender Information
+
+You can customize the sender display name and email address for different types of notifications:
+
+```csharp
+// Server/Helpers/EmailSenderHelper.cs
+namespace YourModule.Helpers
+{
+    public static class EmailSenderHelper
+    {
+        // Department-specific senders
+        public static (string displayName, string email) GetSupportSender()
+            => ("Technical Support", "support@yourcompany.com");
+
+        public static (string displayName, string email) GetSalesSender()
+            => ("Sales Team", "sales@yourcompany.com");
+
+        public static (string displayName, string email) GetBillingSender()
+            => ("Billing Department", "billing@yourcompany.com");
+
+        public static (string displayName, string email) GetSystemSender()
+            => ("System Notifications", "noreply@yourcompany.com");
+    }
+}
+```
+
+**Usage in Service**:
+
+```csharp
+public async Task SendSupportTicketEmail(SupportTicket ticket)
+{
+    var (fromName, fromEmail) = EmailSenderHelper.GetSupportSender();
+
+    var variables = new Dictionary<string, string>
+    {
+        { "TicketNumber", ticket.Id.ToString() },
+        { "Subject", ticket.Subject },
+        { "CustomerName", ticket.CustomerName }
+    };
+
+    await _emailService.SendEmailByTemplateNameAsync(
+        ticket.SiteId,
+        "Support Ticket Created",
+        ticket.CustomerEmail,
+        variables,
+        ticket.CustomerName,
+        fromName,      // "Technical Support"
+        fromEmail      // "support@yourcompany.com"
+    );
+}
+```
+
+**Benefits**:
+- Recipients see which department sent the email
+- Better email organization and filtering
+- Professional branding
+- Easier to track email conversations
+- Reduces chance of emails being marked as spam
 ```
 
 ---
