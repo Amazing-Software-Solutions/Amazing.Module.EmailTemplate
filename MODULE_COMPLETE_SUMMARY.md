@@ -585,7 +585,7 @@ await _emailService.SendEmailByTemplateIdAsync(siteId, templates[0].TemplateId, 
 - Migrated from Module Scope to Site Scope
 - Templates shared across entire site
 - Multi-tenant isolation by SiteId
-- Database migration: ModuleId ? SiteId
+- Database migration: ModuleId :arrow_right: SiteId
 - Two-layer architecture (authorization + data)
 - Updated documentation
 

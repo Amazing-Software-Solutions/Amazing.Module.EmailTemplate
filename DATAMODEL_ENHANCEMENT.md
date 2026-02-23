@@ -145,7 +145,7 @@ While the data model is now functional, consider these future improvements:
 
 ### Recommended Enhancements
 
-1. **Rich Text Editor Integration** ? (Completed in v1.0.1)
+1. **Rich Text Editor Integration** :white_check_mark: (Completed in v1.0.1)
    - Integrated Oqtane's RichTextEditor (QuillJS)
    - WYSIWYG editing for HTML email templates
 
@@ -162,7 +162,7 @@ While the data model is now functional, consider these future improvements:
    - Dedicated category CRUD operations
    - Category-based filtering in list view
 
-5. **Email Sending Integration** ? (Completed in v1.0.1)
+5. **Email Sending Integration** :white_check_mark: (Completed in v1.0.1)
    - Test email sending functionality
    - Integration with Oqtane Notification system
    - IEmailSendingService for inter-module communication

@@ -518,7 +518,7 @@ public async Task SendEmail(string to, string template)
 | Template 'XYZ' not found | Template doesn't exist or typo | Check template name in EmailTemplate module |
 | Template 'XYZ' is inactive | Template exists but IsActive = false | Activate template in EmailTemplate module |
 | Site ID mismatch | Trying to use template from different site | Use correct siteId parameter |
-| Email queued but not delivered | SMTP not configured | Configure SMTP in Admin ? Site Settings |
+| Email queued but not delivered | SMTP not configured | Configure SMTP in Admin :arrow_right: Site Settings |
 
 ### Defensive Coding
 
@@ -633,8 +633,8 @@ await _emailService.SendEmailByTemplateNameAsync(
 
 Emails use Oqtane's Notification system, which requires:
 
-- **SMTP Settings**: Admin ? Site Settings ? SMTP Section
-- **NotificationJob Enabled**: Admin ? Scheduled Jobs
+- **SMTP Settings**: Admin :arrow_right: Site Settings :arrow_right: SMTP Section
+- **NotificationJob Enabled**: Admin :arrow_right: Scheduled Jobs
 
 **If SMTP not configured**:
 
@@ -816,8 +816,8 @@ Result: { Success = true, NotificationId = 123 }
 
 **Check**:
 
-1. SMTP configured: Admin ? Site Settings ? SMTP
-2. NotificationJob enabled: Admin ? Scheduled Jobs
+1. SMTP configured: Admin :arrow_right: Site Settings :arrow_right: SMTP
+2. NotificationJob enabled: Admin :arrow_right: Scheduled Jobs
 3. Check Oqtane Event Log for SMTP errors
 4. Check spam folder
 5. Verify SMTP credentials are correct
