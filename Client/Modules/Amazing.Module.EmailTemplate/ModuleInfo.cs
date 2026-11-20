@@ -9,9 +9,9 @@ namespace Amazing.Module.EmailTemplate
         {
             Name = "EmailTemplate",
             Description = "Amazing.Module.EmailTemplate is a module built for Oqtane",
-            Version = "1.0.3",
+            Version = "1.0.4",
             ServerManagerType = "Amazing.Module.EmailTemplate.Manager.EmailTemplateManager, Amazing.Module.EmailTemplate.Server.Oqtane",
-            ReleaseVersions = "1.0.0,1.0.1,1.0.2,1.0.3",
+            ReleaseVersions = "1.0.0,1.0.1,1.0.2,1.0.3,1.0.4",
             Dependencies = "Amazing.Module.EmailTemplate.Shared.Oqtane",
             PackageName = "Amazing.Module.EmailTemplate" 
         };
