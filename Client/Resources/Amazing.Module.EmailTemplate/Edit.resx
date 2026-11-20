@@ -138,4 +138,34 @@
   <data name="Message.SaveError" xml:space="preserve">
     <value>Error Saving EmailTemplate</value>
   </data>
+  <data name="Message.DeleteError" xml:space="preserve">
+    <value>Error Deleting Category</value>
+  </data>
+  <data name="Template.HelpText" xml:space="preserve">
+    <value>Manage the email template</value>
+  </data>
+  <data name="Template.Text" xml:space="preserve">
+    <value>Template</value>
+  </data>
+  <data name="Categories.HelpText" xml:space="preserve">
+    <value>Manage email template categories</value>
+  </data>
+  <data name="Categories.Text" xml:space="preserve">
+    <value>Categories</value>
+  </data>
+  <data name="Category.Select" xml:space="preserve">
+    <value>Select A Category</value>
+  </data>
+  <data name="CategoryName.Text" xml:space="preserve">
+    <value>Name: </value>
+  </data>
+  <data name="CategoryName.HelpText" xml:space="preserve">
+    <value>Enter a category name</value>
+  </data>
+  <data name="CategoryDescription.Text" xml:space="preserve">
+    <value>Description: </value>
+  </data>
+  <data name="CategoryDescription.HelpText" xml:space="preserve">
+    <value>Enter a category description</value>
+  </data>
 </root>

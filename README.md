@@ -1,4 +1,4 @@
-# Amazing.Module.EmailTemplate
+﻿# Amazing.Module.EmailTemplate
 
 [![.NET](https://img.shields.io/badge/.NET-10.0-blue.svg)](https://dotnet.microsoft.com/download)
 [![Oqtane](https://img.shields.io/badge/Oqtane-10.0.4-green.svg)](https://www.oqtane.org)
@@ -173,27 +173,27 @@ public class YourModuleService
 ### Module Structure
 ```
 Amazing.Module.EmailTemplate/
-|-- Shared/               # Models and interfaces
-|   |-- Models/
-|   |   |-- EmailTemplate.cs
-|   |   |-- EmailSendResult.cs
-|   |   +-- TemplateInfo.cs
-|   +-- Services/
-|       +-- IEmailSendingService.cs  (Public API)
-|
-|-- Server/               # Business logic and API
-|   |-- Controllers/
-|   |   +-- EmailTemplateController.cs
-|   |-- Services/
-|   |   |-- EmailTemplateService.cs    (Internal)
-|   |   +-- EmailSendingService.cs     (Public)
-|   +-- Repository/
-|       +-- EmailTemplateRepository.cs
-|
-+-- Client/               # Blazor UI components
-    +-- Modules/Amazing.Module.EmailTemplate/
-        |-- Index.razor
-        +-- Edit.razor
+├── Shared/               # Models and interfaces
+│   ├── Models/
+│   │   ├── EmailTemplate.cs
+│   │   ├── EmailSendResult.cs
+│   │   └── TemplateInfo.cs
+│   └── Services/
+│       └── IEmailSendingService.cs  (Public API)
+│
+├── Server/               # Business logic and API
+│   ├── Controllers/
+│   │   └── EmailTemplateController.cs
+│   ├── Services/
+│   │   ├── EmailTemplateService.cs    (Internal)
+│   │   └── EmailSendingService.cs     (Public)
+│   └── Repository/
+│       └── EmailTemplateRepository.cs
+│
+└── Client/               # Blazor UI components
+    └── Modules/Amazing.Module.EmailTemplate/
+        ├── Index.razor
+        └── Edit.razor
 ```
 
 ---
@@ -545,6 +545,6 @@ If you find this module useful, please consider giving it a star! It helps other
 
 **Built with love for the Oqtane Community**
 
-[Report Bug](../../issues) � [Request Feature](../../issues) � [Documentation](INTEGRATION_GUIDE.md)
+[Report Bug](../../issues) · [Request Feature](../../issues) · [Documentation](INTEGRATION_GUIDE.md)
 
 </div>

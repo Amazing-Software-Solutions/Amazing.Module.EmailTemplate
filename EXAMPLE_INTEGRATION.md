@@ -1,4 +1,4 @@
-# Example: Using EmailTemplate Module in Your Module
+﻿# Example: Using EmailTemplate Module in Your Module
 
 ## Simple Integration Example
 
@@ -10,21 +10,21 @@ This is a **complete, copy-paste ready example** showing how to use the EmailTem
 
 ```
 YourModule/
-|-- Shared/
-|   +-- Models/
-|       +-- UserRegistration.cs
-|
-|-- Server/
-|   |-- Services/
-|   |   +-- RegistrationService.cs    # Email integration here
-|   |-- Controllers/
-|   |   +-- RegistrationController.cs
-|   +-- Startup/
-|       +-- ServerStartup.cs
-|
-+-- Client/
-    +-- Modules/YourModule/
-        +-- Register.razor
+├── Shared/
+│   └── Models/
+│       └── UserRegistration.cs
+│
+├── Server/
+│   ├── Services/
+│   │   └── RegistrationService.cs    # Email integration here
+│   ├── Controllers/
+│   │   └── RegistrationController.cs
+│   └── Startup/
+│       └── ServerStartup.cs
+│
+└── Client/
+    └── Modules/YourModule/
+        └── Register.razor
 ```
 
 ---
@@ -42,7 +42,7 @@ using Oqtane.Enums;
 using Oqtane.Infrastructure;
 using Oqtane.Models;
 using Oqtane.Repository;
-using Amazing.Module.EmailTemplate.Services;  // :arrow_left: Import this
+using Amazing.Module.EmailTemplate.Services;  // <-- Import this
 
 namespace YourModule.Services
 {
@@ -54,12 +54,12 @@ namespace YourModule.Services
     public class ServerRegistrationService : IRegistrationService
     {
         private readonly IUserRepository _userRepository;
-        private readonly IEmailSendingService _emailService;  // :arrow_left: Inject this
+        private readonly IEmailSendingService _emailService;  // <-- Inject this
         private readonly ILogManager _logger;
 
         public ServerRegistrationService(
             IUserRepository userRepository,
-            IEmailSendingService emailService,  // :arrow_left: Add to constructor
+            IEmailSendingService emailService,  // <-- Add to constructor
             ILogManager logger)
         {
             _userRepository = userRepository;
@@ -95,7 +95,7 @@ namespace YourModule.Services
 
                 var emailResult = await _emailService.SendEmailByTemplateNameAsync(
                     siteId,
-                    "User Welcome Email",  // :arrow_left: Template name
+                    "User Welcome Email",  // <-- Template name
                     email,
                     variables,
                     user.DisplayName,
@@ -280,7 +280,7 @@ Site admin creates this template in EmailTemplate module:
 - **Description**: `Sent when new user registers`
 - **Subject**: `Welcome to Our Site, {{FirstName}}!`
 - **TemplateVariables**: `{{FirstName}},{{LastName}},{{Email}},{{Username}}`
-- **Active**: :white_check_mark: Checked
+- **Active**: Checked
 - **Body** (use Rich Text Editor):
 
 ```html

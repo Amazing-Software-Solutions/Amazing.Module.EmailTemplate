@@ -10,6 +10,7 @@ namespace Amazing.Module.EmailTemplate.Repository
     public class EmailTemplateContext : DBContextBase, ITransientService, IMultiDatabase
     {
         public virtual DbSet<Models.EmailTemplate> EmailTemplate { get; set; }
+        public virtual DbSet<Models.EmailTemplateCategory> EmailTemplateCategory { get; set; }
 
         public EmailTemplateContext(IDBContextDependencies DBContextDependencies) : base(DBContextDependencies)
         {
@@ -21,6 +22,7 @@ namespace Amazing.Module.EmailTemplate.Repository
             base.OnModelCreating(builder);
 
             builder.Entity<Models.EmailTemplate>().ToTable(ActiveDatabase.RewriteName("AmazingEmailTemplate"));
+            builder.Entity<Models.EmailTemplateCategory>().ToTable(ActiveDatabase.RewriteName("AmazingEmailTemplateCategory"));
         }
     }
 }

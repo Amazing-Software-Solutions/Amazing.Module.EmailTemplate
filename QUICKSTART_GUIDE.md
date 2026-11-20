@@ -1,4 +1,4 @@
-# Amazing.Module.EmailTemplate - Quickstart Guide
+﻿# Amazing.Module.EmailTemplate - Quickstart Guide
 
 ## Module Status: PRODUCTION READY
 
@@ -42,43 +42,43 @@ Your EmailTemplate module is a **fully functional, professional Oqtane module** 
 
 ```
 Amazing.Module.EmailTemplate/
-|-- Shared/                           # Models and interfaces
-|   |-- Models/
-|   |   |-- EmailTemplate.cs         # Enhanced: 8 fields + audit, SiteId
-|   |   |-- EmailSendResult.cs
-|   |   |-- TemplateInfo.cs
-|   |   |-- TestEmailRequest.cs
-|   |   +-- TestEmailResult.cs
-|   +-- Services/
-|       +-- IEmailSendingService.cs   # Public API for other modules
-|
-|-- Server/                           # Business logic and API
-|   |-- Controllers/
-|   |   +-- EmailTemplateController.cs  # 6 API endpoints
-|   |-- Services/
-|   |   |-- EmailTemplateService.cs  # Internal UI management
-|   |   +-- EmailSendingService.cs   # Public email sending
-|   |-- Repository/
-|   |   |-- EmailTemplateContext.cs
-|   |   +-- EmailTemplateRepository.cs  # Site-scoped queries
-|   |-- Manager/
-|   |   +-- EmailTemplateManager.cs  # IPortable + ISearchable
-|   |-- Migrations/
-|   |   |-- 01000000_InitializeModule.cs
-|   |   |-- 01000001_AddEmailTemplateFields.cs
-|   |   |-- 01000002_ChangeScopeToSiteId.cs
-|   |   +-- EntityBuilders/
-|   |       +-- EmailTemplateEntityBuilder.cs
-|   +-- Startup/
-|       +-- ServerStartup.cs
-|
-+-- Client/                           # Blazor UI components
-    |-- Modules/Amazing.Module.EmailTemplate/
-    |   |-- Index.razor               # Enhanced list view
-    |   |-- Edit.razor                # RichTextEditor + Test Email
-    |   +-- Settings.razor
-    +-- Services/
-        +-- EmailTemplateService.cs   # Client API service (7 methods)
+├── Shared/                           # Models and interfaces
+│   ├── Models/
+│   │   ├── EmailTemplate.cs         # Enhanced: 8 fields + audit, SiteId
+│   │   ├── EmailSendResult.cs
+│   │   ├── TemplateInfo.cs
+│   │   ├── TestEmailRequest.cs
+│   │   └── TestEmailResult.cs
+│   └── Services/
+│       └── IEmailSendingService.cs   # Public API for other modules
+│
+├── Server/                           # Business logic and API
+│   ├── Controllers/
+│   │   └── EmailTemplateController.cs  # 6 API endpoints
+│   ├── Services/
+│   │   ├── EmailTemplateService.cs  # Internal UI management
+│   │   └── EmailSendingService.cs   # Public email sending
+│   ├── Repository/
+│   │   ├── EmailTemplateContext.cs
+│   │   └── EmailTemplateRepository.cs  # Site-scoped queries
+│   ├── Manager/
+│   │   └── EmailTemplateManager.cs  # IPortable + ISearchable
+│   ├── Migrations/
+│   │   ├── 01000000_InitializeModule.cs
+│   │   ├── 01000001_AddEmailTemplateFields.cs
+│   │   ├── 01000002_ChangeScopeToSiteId.cs
+│   │   └── EntityBuilders/
+│   │       └── EmailTemplateEntityBuilder.cs
+│   └── Startup/
+│       └── ServerStartup.cs
+│
+└── Client/                           # Blazor UI components
+    ├── Modules/Amazing.Module.EmailTemplate/
+    │   ├── Index.razor               # Enhanced list view
+    │   ├── Edit.razor                # RichTextEditor + Test Email
+    │   └── Settings.razor
+    └── Services/
+        └── EmailTemplateService.cs   # Client API service (7 methods)
 ```
 
 ---
@@ -155,10 +155,10 @@ Amazing.Module.EmailTemplate/
 User Clicks "Send Test Email"
   |
   v
-Client Service :arrow_right: API Controller :arrow_right: Server Service
+Client Service -> API Controller -> Server Service
   |
   v
-Variable Replacement ({{Name}} :arrow_right: "John")
+Variable Replacement ({{Name}} -> "John")
   |
   v
 Create Notification Record
@@ -211,7 +211,7 @@ Get-Process dotnet | Stop-Process -Force
 
 ```
 Press: Ctrl + Shift + R (hard refresh)
-Or: Ctrl + Shift + Delete :arrow_right: Clear cache
+Or: Ctrl + Shift + Delete -> Clear cache
 ```
 
 ---

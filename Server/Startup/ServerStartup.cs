@@ -22,6 +22,7 @@ namespace Amazing.Module.EmailTemplate.Startup
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddTransient<IEmailTemplateService, ServerEmailTemplateService>();
+            services.AddTransient<IEmailTemplateCategoryService, ServerEmailTemplateCategoryService>();
             services.AddTransient<IEmailSendingService, ServerEmailSendingService>();
             services.AddDbContextFactory<EmailTemplateContext>(opt => { }, ServiceLifetime.Transient);
         }

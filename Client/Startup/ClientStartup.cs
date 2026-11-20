@@ -13,6 +13,10 @@ namespace Amazing.Module.EmailTemplate.Startup
             {
                 services.AddScoped<IEmailTemplateService, EmailTemplateService>();
             }
+            if (!services.Any(s => s.ServiceType == typeof(IEmailTemplateCategoryService)))
+            {
+                services.AddScoped<IEmailTemplateCategoryService, EmailTemplateCategoryService>();
+            }
         }
     }
 }

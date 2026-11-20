@@ -5,86 +5,157 @@
 @namespace Amazing.Module.EmailTemplate
 @inherits ModuleBase
 @inject IEmailTemplateService EmailTemplateService
+@inject IEmailTemplateCategoryService EmailTemplateCategoryService
 @inject NavigationManager NavigationManager
 @inject IStringLocalizer<Edit> Localizer
 
-<form @ref="form" class="@(validated ? " was-validated" : "needs-validation" )" novalidate>
-    <div class="container">
-        <div class="row mb-1 align-items-center">
-            <Label Class="col-sm-3" For="name" HelpText="Enter a name" ResourceKey="Name">Name: </Label>
-            <div class="col-sm-9">
-                <input id="name" class="form-control" @bind="@_name" required />
-            </div>
-        </div>
-        <div class="row mb-1 align-items-center">
-            <Label Class="col-sm-3" For="description" HelpText="Enter a description" ResourceKey="Description">Description: </Label>
-            <div class="col-sm-9">
-                <textarea id="description" class="form-control" @bind="@_description" rows="2"></textarea>
-            </div>
-        </div>
-        <div class="row mb-1 align-items-center">
-            <Label Class="col-sm-3" For="category" HelpText="Enter a category" ResourceKey="Category">Category: </Label>
-            <div class="col-sm-9">
-                <input id="category" class="form-control" @bind="@_category" />
-            </div>
-        </div>
-        <div class="row mb-1 align-items-center">
-            <Label Class="col-sm-3" For="subject" HelpText="Enter email subject" ResourceKey="Subject">Subject: </Label>
-            <div class="col-sm-9">
-                <input id="subject" class="form-control" @bind="@_subject" required />
-            </div>
-        </div>
-        <div class="row mb-1 align-items-center">
-            <Label Class="col-sm-3" For="templateVariables" HelpText="Enter template variables (comma-separated)" ResourceKey="TemplateVariables">Variables: </Label>
-            <div class="col-sm-9">
-                <input id="templateVariables" class="form-control" @bind="@_templateVariables" placeholder="e.g., {{FirstName}},{{LastName}},{{Email}}" />
-            </div>
-        </div>
-        <div class="row mb-1 align-items-center">
-            <Label Class="col-sm-3" For="isActive" HelpText="Is this template active?" ResourceKey="IsActive">Active: </Label>
-            <div class="col-sm-9">
-                <input id="isActive" type="checkbox" @bind="@_isActive" />
-            </div>
-        </div>
-    </div>
-    
-    <Section Name="EmailBody" Heading="Email Body" ResourceKey="EmailBody">
-        <RichTextEditor Content="@_body" @ref="@RichTextEditorBody" Placeholder="Enter email body content"></RichTextEditor>
-    </Section>
-    
-    <Section Name="TestEmail" Heading="Test Email" ResourceKey="TestEmail" Expanded="false">
-        <div class="container">
-            <div class="row mb-1 align-items-center">
-                <Label Class="col-sm-3" For="testEmail" HelpText="Enter email address to send test" ResourceKey="TestEmailAddress">Test Email: </Label>
-                <div class="col-sm-9">
-                    <input id="testEmail" type="email" class="form-control" @bind="@_testEmail" placeholder="user@example.com" />
+<TabStrip>
+    <TabPanel Name="Template" Heading="Template" ResourceKey="Template">
+        <form @ref="form" class="@(validated ? " was-validated" : "needs-validation" )" novalidate>
+            <div class="container">
+                <div class="row mb-1 align-items-center">
+                    <Label Class="col-sm-3" For="name" HelpText="Enter a name" ResourceKey="Name">Name: </Label>
+                    <div class="col-sm-9">
+                        <input id="name" class="form-control" @bind="@_name" required />
+                    </div>
+                </div>
+                <div class="row mb-1 align-items-center">
+                    <Label Class="col-sm-3" For="description" HelpText="Enter a description" ResourceKey="Description">Description: </Label>
+                    <div class="col-sm-9">
+                        <textarea id="description" class="form-control" @bind="@_description" rows="2"></textarea>
+                    </div>
+                </div>
+                <div class="row mb-1 align-items-center">
+                    <Label Class="col-sm-3" For="category" HelpText="Select a category" ResourceKey="Category">Category: </Label>
+                    <div class="col-sm-9">
+                        <select id="category" class="form-select" @bind="@_category">
+                            <option value="">&lt;@Localizer["Category.Select"]&gt;</option>
+                            @foreach (var category in _categories)
+                            {
+                                <option value="@category.Name">@category.Name</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="row mb-1 align-items-center">
+                    <Label Class="col-sm-3" For="subject" HelpText="Enter email subject" ResourceKey="Subject">Subject: </Label>
+                    <div class="col-sm-9">
+                        <input id="subject" class="form-control" @bind="@_subject" required />
+                    </div>
+                </div>
+                <div class="row mb-1 align-items-center">
+                    <Label Class="col-sm-3" For="templateVariables" HelpText="Enter template variables (comma-separated)" ResourceKey="TemplateVariables">Variables: </Label>
+                    <div class="col-sm-9">
+                        <input id="templateVariables" class="form-control" @bind="@_templateVariables" placeholder="e.g., {{FirstName}},{{LastName}},{{Email}}" />
+                    </div>
+                </div>
+                <div class="row mb-1 align-items-center">
+                    <Label Class="col-sm-3" For="isActive" HelpText="Is this template active?" ResourceKey="IsActive">Active: </Label>
+                    <div class="col-sm-9">
+                        <input id="isActive" type="checkbox" @bind="@_isActive" />
+                    </div>
                 </div>
             </div>
-            <div class="row mb-1 align-items-center">
-                <Label Class="col-sm-3" For="testVariables" HelpText="Sample data for template variables (JSON format)" ResourceKey="TestVariables">Sample Variables: </Label>
-                <div class="col-sm-9">
-                    <textarea id="testVariables" class="form-control" @bind="@_testVariables" rows="3" placeholder='{"FirstName":"John","LastName":"Doe","Email":"john@example.com"}'></textarea>
-                </div>
-            </div>
-            <div class="row mb-1">
-                <div class="col-sm-9 offset-sm-3">
-                    <button type="button" class="btn btn-primary" @onclick="SendTestEmail">
-                        <i class="oi oi-envelope-closed"></i> @Localizer["SendTestEmail"]
-                    </button>
-                </div>
-            </div>
-        </div>
-    </Section>
-    <br />
 
-    <button type="button" class="btn btn-success" @onclick="Save">@Localizer["Save"]</button>
-    <NavLink class="btn btn-secondary" href="@NavigateUrl()">@Localizer["Cancel"]</NavLink>
-    <br /><br />
-    @if (PageState.Action == "Edit")
-    {
-    <AuditInfo CreatedBy="@_createdby" CreatedOn="@_createdon" ModifiedBy="@_modifiedby" ModifiedOn="@_modifiedon"></AuditInfo>
-    }
-</form>
+            <Section Name="EmailBody" Heading="Email Body" ResourceKey="EmailBody">
+                <RichTextEditor Content="@_body" @ref="@RichTextEditorBody" Placeholder="Enter email body content"></RichTextEditor>
+            </Section>
+
+            <Section Name="TestEmail" Heading="Test Email" ResourceKey="TestEmail" Expanded="false">
+                <div class="container">
+                    <div class="row mb-1 align-items-center">
+                        <Label Class="col-sm-3" For="testEmail" HelpText="Enter email address to send test" ResourceKey="TestEmailAddress">Test Email: </Label>
+                        <div class="col-sm-9">
+                            <input id="testEmail" type="email" class="form-control" @bind="@_testEmail" placeholder="user@example.com" />
+                        </div>
+                    </div>
+                    <div class="row mb-1 align-items-center">
+                        <Label Class="col-sm-3" For="testVariables" HelpText="Sample data for template variables (JSON format)" ResourceKey="TestVariables">Sample Variables: </Label>
+                        <div class="col-sm-9">
+                            <textarea id="testVariables" class="form-control" @bind="@_testVariables" rows="3" placeholder='{"FirstName":"John","LastName":"Doe","Email":"john@example.com"}'></textarea>
+                        </div>
+                    </div>
+                    <div class="row mb-1">
+                        <div class="col-sm-9 offset-sm-3">
+                            <button type="button" class="btn btn-primary" @onclick="SendTestEmail">
+                                <i class="oi oi-envelope-closed"></i> @Localizer["SendTestEmail"]
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </Section>
+            <br />
+
+            <button type="button" class="btn btn-success" @onclick="Save">@Localizer["Save"]</button>
+            <NavLink class="btn btn-secondary" href="@NavigateUrl()">@Localizer["Cancel"]</NavLink>
+            <br /><br />
+            @if (PageState.Action == "Edit")
+            {
+            <AuditInfo CreatedBy="@_createdby" CreatedOn="@_createdon" ModifiedBy="@_modifiedby" ModifiedOn="@_modifiedon"></AuditInfo>
+            }
+        </form>
+    </TabPanel>
+    <TabPanel Name="Categories" Heading="Categories" ResourceKey="Categories">
+        <form @ref="categoryForm" class="@(categoryValidated ? " was-validated" : "needs-validation" )" novalidate>
+            <div class="container">
+                <div class="row mb-1 align-items-center">
+                    <Label Class="col-sm-3" For="categoryName" HelpText="Enter a category name" ResourceKey="CategoryName">Name: </Label>
+                    <div class="col-sm-9">
+                        <input id="categoryName" class="form-control" @bind="@_categoryName" required />
+                    </div>
+                </div>
+                <div class="row mb-1 align-items-center">
+                    <Label Class="col-sm-3" For="categoryDescription" HelpText="Enter a category description" ResourceKey="CategoryDescription">Description: </Label>
+                    <div class="col-sm-9">
+                        <textarea id="categoryDescription" class="form-control" @bind="@_categoryDescription" rows="2"></textarea>
+                    </div>
+                </div>
+                <div class="row mb-1">
+                    <div class="col-sm-9 offset-sm-3">
+                        <button type="button" class="btn btn-success" @onclick="SaveCategory">@Localizer["Save"]</button>
+                        @if (_editingCategoryId != -1)
+                        {
+                            <button type="button" class="btn btn-secondary" @onclick="CancelCategoryEdit">@Localizer["Cancel"]</button>
+                        }
+                    </div>
+                </div>
+            </div>
+        </form>
+        <br />
+        @if (_categories.Count != 0)
+        {
+            <table class="table table-borderless">
+                <thead>
+                    <tr>
+                        <th>@Localizer["CategoryName"]</th>
+                        <th>@Localizer["CategoryDescription"]</th>
+                        <th>&nbsp;</th>
+                        <th>&nbsp;</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var category in _categories)
+                    {
+                        <tr>
+                            <td>@category.Name</td>
+                            <td>@category.Description</td>
+                            <td>
+                                <button type="button" class="btn btn-primary" @onclick="@(() => EditCategory(category))">
+                                    <i class="oi oi-pencil"></i>
+                                </button>
+                            </td>
+                            <td>
+                                <button type="button" class="btn btn-danger" @onclick="@(() => DeleteCategory(category))">
+                                    <i class="oi oi-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </TabPanel>
+</TabStrip>
 
 @code {
     public override SecurityAccessLevel SecurityAccessLevel => SecurityAccessLevel.Edit;
@@ -101,6 +172,13 @@
     private ElementReference form;
     private bool validated = false;
     private RichTextEditor RichTextEditorBody;
+
+    private List<EmailTemplateCategory> _categories = new List<EmailTemplateCategory>();
+    private ElementReference categoryForm;
+    private bool categoryValidated = false;
+    private int _editingCategoryId = -1;
+    private string _categoryName;
+    private string _categoryDescription;
 
     private int _id;
     private string _name;
@@ -121,6 +199,8 @@
     {
         try
         {
+            _categories = await EmailTemplateCategoryService.GetEmailTemplateCategoriesAsync(ModuleState.ModuleId);
+
             if (PageState.Action == "Edit")
             {
                 _id = Int32.Parse(PageState.QueryString["id"]);
@@ -244,5 +324,89 @@
             await logger.LogError(ex, "Error Sending Test Email {Error}", ex.Message);
             AddModuleMessage(Localizer["Error.TestEmail.Send"], MessageType.Error);
         }
+    }
+
+    private async Task SaveCategory()
+    {
+        try
+        {
+            categoryValidated = true;
+            var interop = new Oqtane.UI.Interop(JSRuntime);
+            if (await interop.FormValid(categoryForm))
+            {
+                if (_editingCategoryId == -1)
+                {
+                    var category = new EmailTemplateCategory();
+                    category.SiteId = PageState.Site.SiteId;
+                    category.Name = _categoryName;
+                    category.Description = _categoryDescription;
+                    await EmailTemplateCategoryService.AddEmailTemplateCategoryAsync(category, ModuleState.ModuleId);
+                    await logger.LogInformation("EmailTemplateCategory Added {Name}", _categoryName);
+                }
+                else
+                {
+                    var category = await EmailTemplateCategoryService.GetEmailTemplateCategoryAsync(_editingCategoryId, ModuleState.ModuleId);
+                    category.Name = _categoryName;
+                    category.Description = _categoryDescription;
+                    await EmailTemplateCategoryService.UpdateEmailTemplateCategoryAsync(category, ModuleState.ModuleId);
+                    await logger.LogInformation("EmailTemplateCategory Updated {Name}", _categoryName);
+                }
+                await RefreshCategories();
+                ResetCategoryForm();
+            }
+            else
+            {
+                AddModuleMessage(Localizer["Message.SaveValidation"], MessageType.Warning);
+            }
+        }
+        catch (Exception ex)
+        {
+            await logger.LogError(ex, "Error Saving EmailTemplateCategory {Error}", ex.Message);
+            AddModuleMessage(Localizer["Message.SaveError"], MessageType.Error);
+        }
+    }
+
+    private void EditCategory(EmailTemplateCategory category)
+    {
+        _editingCategoryId = category.EmailTemplateCategoryId;
+        _categoryName = category.Name;
+        _categoryDescription = category.Description;
+    }
+
+    private void CancelCategoryEdit()
+    {
+        ResetCategoryForm();
+    }
+
+    private async Task DeleteCategory(EmailTemplateCategory category)
+    {
+        try
+        {
+            await EmailTemplateCategoryService.DeleteEmailTemplateCategoryAsync(category.EmailTemplateCategoryId, ModuleState.ModuleId);
+            await logger.LogInformation("EmailTemplateCategory Deleted {Name}", category.Name);
+            await RefreshCategories();
+            if (_editingCategoryId == category.EmailTemplateCategoryId)
+            {
+                ResetCategoryForm();
+            }
+        }
+        catch (Exception ex)
+        {
+            await logger.LogError(ex, "Error Deleting EmailTemplateCategory {Error}", ex.Message);
+            AddModuleMessage(Localizer["Message.DeleteError"], MessageType.Error);
+        }
+    }
+
+    private async Task RefreshCategories()
+    {
+        _categories = await EmailTemplateCategoryService.GetEmailTemplateCategoriesAsync(ModuleState.ModuleId);
+    }
+
+    private void ResetCategoryForm()
+    {
+        _editingCategoryId = -1;
+        _categoryName = string.Empty;
+        _categoryDescription = string.Empty;
+        categoryValidated = false;
     }
 }
